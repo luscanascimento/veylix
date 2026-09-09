@@ -6,12 +6,14 @@ This file tracks the active progress of the Veylix platform development across a
 
 ## Current Status
 
-* **Completed Stage**: ETAPA 0 — Discovery + Architecture
-* **Completed Checkpoint**: CHECKPOINT A — Jules Architectural Review (APPROVED & MERGED)
-  * Jules Session ID: `10457311059562432365`
-  * Review Document: [`docs/architecture/independent-review.md`](./architecture/independent-review.md)
-  * Assessment: Architecture validated as near-production quality with recommendations on pragmatic layering for simple modules.
-* **Next Stage**: ETAPA 1 — Foundation (Turborepo + pnpm + Next.js + NestJS + Docker Compose + PostgreSQL + Prisma + Health Checks + Structured Logs)
+- **Completed Stage**: ETAPA 1 — Foundation (COMPLETED)
+  - Monorepo orchestrated with pnpm 10 + Turborepo 2.
+  - Backend API (`apps/api`): NestJS 12, Pino structured logger, Helmet, CORS, X-Request-Id middleware, global exception filter, environment validation with Zod, HealthModule (`/health/liveness` & `/health/readiness`), PrismaService with lifecycle hooks.
+  - Frontend Web (`apps/web`): Next.js 16 (App Router), React 19, TypeScript strict, Tailwind CSS, health route (`/api/health`), foundation landing shell.
+  - Shared Packages: `@veylix/types`, `@veylix/validation`, `@veylix/ui`, `@veylix/typescript-config`, `@veylix/eslint-config`.
+  - Database & CI: PostgreSQL Docker Compose, Prisma 6.19.3 schema and client, GitHub Actions CI workflow.
+- **Next Stage**: ETAPA 2 — Design System + Application Shell (shadcn/ui, Tailwind design tokens, Storybook, layout, sidebar, header, theme, command palette, accessible components, DataTable base, loading/empty/error states)
+- **Next Checkpoint**: CHECKPOINT B — Jules Frontend & Design System Review
 
 ---
 
@@ -19,7 +21,7 @@ This file tracks the active progress of the Veylix platform development across a
 
 - [x] **ETAPA 0: Discovery + Architecture** (Commit `15032bf`)
 - [x] **CHECKPOINT A: Jules Architecture Review** (Merged in `f804d7c`)
-- [ ] **ETAPA 1: Foundation**
+- [x] **ETAPA 1: Foundation** (Commit ready)
 - [ ] **ETAPA 2: Design System + Application Shell**
 - [ ] **CHECKPOINT B: Jules Frontend Review**
 - [ ] **ETAPA 3: Domain + Database**
