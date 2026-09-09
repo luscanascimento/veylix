@@ -6,18 +6,19 @@ This file tracks the active progress of the Veylix platform development across a
 
 ## Current Status
 
-* **Active Stage**: ETAPA 0 — Discovery + Architecture (COMPLETED)
-* **Active Checkpoint**: CHECKPOINT A — Jules Architectural Review (IN PROGRESS)
+* **Completed Stage**: ETAPA 0 — Discovery + Architecture
+* **Completed Checkpoint**: CHECKPOINT A — Jules Architectural Review (APPROVED & MERGED)
   * Jules Session ID: `10457311059562432365`
-  * Task: Independent architectural review of monorepo, boundaries, dependencies, patterns, security, and overengineering risks.
-* **Next Stage**: ETAPA 1 — Foundation (pnpm + Turborepo + Next.js + NestJS + Docker + PostgreSQL + Prisma + Health Checks + Structured Logs)
+  * Review Document: [`docs/architecture/independent-review.md`](./architecture/independent-review.md)
+  * Assessment: Architecture validated as near-production quality with recommendations on pragmatic layering for simple modules.
+* **Next Stage**: ETAPA 1 — Foundation (Turborepo + pnpm + Next.js + NestJS + Docker Compose + PostgreSQL + Prisma + Health Checks + Structured Logs)
 
 ---
 
 ## Roadmap & Checkpoints Progress
 
 - [x] **ETAPA 0: Discovery + Architecture** (Commit `15032bf`)
-- [ ] **CHECKPOINT A: Jules Architecture Review** *(Active)*
+- [x] **CHECKPOINT A: Jules Architecture Review** (Merged in `f804d7c`)
 - [ ] **ETAPA 1: Foundation**
 - [ ] **ETAPA 2: Design System + Application Shell**
 - [ ] **CHECKPOINT B: Jules Frontend Review**
