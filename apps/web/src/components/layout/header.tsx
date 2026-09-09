@@ -6,14 +6,24 @@ import { Button } from "@veylix/ui";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { CommandPalette } from "@/components/layout/command-palette";
 
-export function Header() {
+export interface HeaderProps {
+  onMenuClick?: () => void;
+}
+
+export function Header({ onMenuClick }: HeaderProps) {
   const [paletteOpen, setPaletteOpen] = React.useState(false);
 
   return (
     <>
       <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white/95 backdrop-blur px-4 sm:px-6 dark:border-slate-800 dark:bg-slate-950/95">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" className="lg:hidden">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={onMenuClick}
+            aria-label="Open sidebar"
+          >
             <Menu className="h-5 w-5 text-slate-600 dark:text-slate-400" />
           </Button>
           <button
