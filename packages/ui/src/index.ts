@@ -1,22 +1,18 @@
-// Veylix Design System foundation export
-export const VEYLIX_UI_VERSION = "0.1.0";
+export * from "./tokens/index.js";
+export * from "./primitives/utils.js";
+export * from "./primitives/button.js";
+export * from "./primitives/input.js";
+export * from "./primitives/badge.js";
+export * from "./primitives/card.js";
+export * from "./primitives/table.js";
+export * from "./primitives/skeleton.js";
+export * from "./primitives/alert.js";
 
-export const designTokens = {
-  colors: {
-    primary: "#0f172a",
-    primaryForeground: "#f8fafc",
-    secondary: "#f1f5f9",
-    secondaryForeground: "#0f172a",
-    accent: "#3b82f6",
-    destructive: "#ef4444",
-    background: "#ffffff",
-    surface: "#f8fafc",
-    border: "#e2e8f0",
-  },
-  radius: {
-    sm: "0.25rem",
-    md: "0.375rem",
-    lg: "0.5rem",
-    full: "9999px",
-  },
-} as const;
+export * from "./components/status-badge.js";
+export * from "./components/empty-state.js";
+export * from "./components/error-state.js";
+export * from "./components/stat-card.js";
+export * from "./components/search-input.js";
+export * from "./components/data-table.js";
+
+export * from "./patterns/page-header.js";

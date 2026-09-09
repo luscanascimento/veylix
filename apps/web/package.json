@@ -15,10 +15,15 @@
     "@veylix/types": "workspace:*",
     "@veylix/ui": "workspace:*",
     "@veylix/validation": "workspace:*",
-    "lucide-react": "^1.16.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
+    "lucide-react": "^1.43.0",
     "next": "^16.3.4",
+    "next-themes": "^0.4.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.6.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
@@ -28,11 +33,11 @@
     "@veylix/eslint-config": "workspace:*",
     "@veylix/typescript-config": "workspace:*",
     "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^15.2.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.2",
-    "vitest": "^3.0.7",
-    "eslint": "^8.57.1",
-    "eslint-config-next": "^15.2.0"
+    "vitest": "^3.0.7"
   }
 }
