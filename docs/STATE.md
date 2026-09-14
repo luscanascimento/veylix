@@ -6,16 +6,15 @@ This file tracks the active progress of the Veylix platform development across a
 
 ## Current Status
 
-- **Completed Stage**: ETAPA 2 — Design System + Application Shell
-- **Completed Checkpoint**: CHECKPOINT B — Jules Frontend & Accessibility Review (APPROVED & MERGED)
-  - Jules PR: `jules-frontend-accessibility-12132635804853413788` (Commit `11a01ea`)
+- **Completed Stage**: ETAPA 3 — Domain + Database
+- **Completed Checkpoint**: CHECKPOINT C — Jules Domain & Database Review (APPROVED & MERGED)
+  - Jules Branch: `feature-etapa-3-domain-db-...` (Commit `cba0908`)
   - Enhancements:
-    1. Clean Server/Client boundary separation with `LayoutWrapper`.
-    2. Radix UI `Dialog` integrated with `cmdk` in `CommandPalette` for full keyboard accessibility and focus trapping.
-    3. Mobile responsive navigation state with toggleable sidebar.
-    4. Essential ARIA labels added to search inputs and pagination buttons.
-- **Next Stage**: ETAPA 3 — Domain + Database (Prisma schema migration, domain entities, state machine, invariants, repositories, factories, seed data)
-- **Next Checkpoint**: CHECKPOINT C — Jules Domain & Database Review
+    1. Enforced Prisma composite unique constraint for proper optimistic locking (`@@unique([id, version])`).
+    2. Fixed `canTransfer` invariant to guard against transferring to the same employee.
+    3. Successfully integrated atomic transaction scope in `AssetService`.
+- **Next Stage**: ETAPA 4 — Authentication + Authorization (Sessions, JWT/Session tokens, RBAC policies, decorators)
+- **Next Checkpoint**: CHECKPOINT D — Jules Security Review (Offensive)
 
 ---
 
@@ -26,8 +25,8 @@ This file tracks the active progress of the Veylix platform development across a
 - [x] **ETAPA 1: Foundation** (Commit `8344fb2`)
 - [x] **ETAPA 2: Design System + Application Shell** (Commit `7a7e4a7`)
 - [x] **CHECKPOINT B: Jules Frontend Review** (Merged in `11a01ea`)
-- [ ] **ETAPA 3: Domain + Database**
-- [ ] **CHECKPOINT C: Jules Domain & Database Review**
+- [x] **ETAPA 3: Domain + Database** (Commit `682f625`)
+- [x] **CHECKPOINT C: Jules Domain & Database Review** (Merged in `cba0908`)
 - [ ] **ETAPA 4: Authentication + Authorization**
 - [ ] **CHECKPOINT D: Jules Security Review (Offensive)**
 - [ ] **ETAPA 5: Core Asset Management**
