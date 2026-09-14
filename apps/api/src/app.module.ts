@@ -5,6 +5,7 @@ import configuration from "./config/configuration.js";
 import { LoggerModule } from "./common/logger/logger.module.js";
 import { PrismaModule } from "./modules/prisma/prisma.module.js";
 import { HealthModule } from "./modules/health/health.module.js";
+import { AssetModule } from "./modules/asset/asset.module.js";
 import { RequestIdMiddleware } from "./common/middleware/request-id.middleware.js";
 
 @Module({
@@ -17,6 +18,7 @@ import { RequestIdMiddleware } from "./common/middleware/request-id.middleware.j
     LoggerModule,
     PrismaModule,
     HealthModule,
+    AssetModule,
   ],
 })
 export class AppModule implements NestModule {

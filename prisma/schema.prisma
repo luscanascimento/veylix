@@ -180,6 +180,7 @@ model Asset {
   @@index([status, categoryId, locationId], name: "idx_assets_status_category_location")
   @@index([assignedEmployeeId], name: "idx_assets_assigned_employee")
   @@index([serialNumber], name: "idx_assets_serial_number")
+  @@unique([id, version], name: "idx_assets_id_version")
   @@map("assets")
 }
 
