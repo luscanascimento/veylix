@@ -70,4 +70,4 @@ export interface HealthCheckResponse {
     };
   };
 }
-export * from './domain';
+export * from "./domain";

@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
-import { AssetStateMachine, DomainError } from '../domain/AssetStateMachine';
-import { MovementType, AssetStatus } from '@veylix/types';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../prisma/prisma.service";
+import { AssetStateMachine, DomainError } from "../domain/AssetStateMachine";
+import { MovementType, AssetStatus } from "@veylix/types";
 
 interface AssignAssetDto {
   assetId: string;
@@ -55,7 +55,7 @@ export class AssetService {
       `;
 
       if (!assets || assets.length === 0) {
-        throw new DomainError('Asset not found');
+        throw new DomainError("Asset not found");
       }
 
       const asset = assets[0];
@@ -63,7 +63,9 @@ export class AssetService {
       // Validate Domain Invariants
       AssetStateMachine.canAssign(asset.status, !!asset.assigned_employee_id);
 
-      const nextStatus = AssetStateMachine.getNextStatusForMovement(MovementType.ASSIGNMENT);
+      const nextStatus = AssetStateMachine.getNextStatusForMovement(
+        MovementType.ASSIGNMENT,
+      );
       const newVersion = asset.version + 1;
 
       // Optimistic lock (INV-007)
@@ -113,15 +115,22 @@ export class AssetService {
       `;
 
       if (!assets || assets.length === 0) {
-        throw new DomainError('Asset not found');
+        throw new DomainError("Asset not found");
       }
 
       const asset = assets[0];
 
       // Validate Domain Invariants
-      AssetStateMachine.canTransfer(asset.status, asset.assigned_employee_id, dto.fromEmployeeId, dto.toEmployeeId);
+      AssetStateMachine.canTransfer(
+        asset.status,
+        asset.assigned_employee_id,
+        dto.fromEmployeeId,
+        dto.toEmployeeId,
+      );
 
-      const nextStatus = AssetStateMachine.getNextStatusForMovement(MovementType.TRANSFER);
+      const nextStatus = AssetStateMachine.getNextStatusForMovement(
+        MovementType.TRANSFER,
+      );
       const newVersion = asset.version + 1;
 
       const updatedAsset = await tx.asset.update({

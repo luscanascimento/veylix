@@ -1,4 +1,10 @@
-import { AssetStatus, MaintenancePriority, MaintenanceStatus, MovementType, UserRole } from './index';
+import {
+  AssetStatus,
+  MaintenancePriority,
+  MaintenanceStatus,
+  MovementType,
+  UserRole,
+} from "./index";
 
 export interface BaseEntity {
   id: string;

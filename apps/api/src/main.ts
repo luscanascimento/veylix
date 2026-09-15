@@ -2,6 +2,7 @@ import { NestFactory } from "@nestjs/core";
 import { ValidationPipe } from "@nestjs/common";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
 import { AppModule } from "./app.module.js";
 import { AppLogger } from "./common/logger/pino.logger.js";
 import { GlobalHttpExceptionFilter } from "./common/filters/http-exception.filter.js";
@@ -16,6 +17,9 @@ async function bootstrap() {
 
   // Security Headers
   app.use(helmet());
+
+  // Cookie Parser
+  app.use(cookieParser());
 
   // CORS Configuration
   const corsOrigins = (
