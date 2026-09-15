@@ -8,6 +8,9 @@ import { PrismaModule } from "./modules/prisma/prisma.module.js";
 import { HealthModule } from "./modules/health/health.module.js";
 import { AssetModule } from "./modules/asset/asset.module.js";
 import { AuthModule } from "./modules/auth/auth.module.js";
+import { CategoryModule } from "./modules/category/category.module.js";
+import { LocationModule } from "./modules/location/location.module.js";
+import { EmployeeModule } from "./modules/employee/employee.module.js";
 import { RequestIdMiddleware } from "./common/middleware/request-id.middleware.js";
 import { AuthGuard } from "./common/guards/auth.guard.js";
 import { RolesGuard } from "./common/guards/roles.guard.js";
@@ -24,6 +27,9 @@ import { RolesGuard } from "./common/guards/roles.guard.js";
     HealthModule,
     AssetModule,
     AuthModule,
+    CategoryModule,
+    LocationModule,
+    EmployeeModule,
   ],
   providers: [
     {
