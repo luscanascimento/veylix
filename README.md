@@ -4,6 +4,8 @@ Veylix is a modern, enterprise-grade physical asset inventory and lifecycle mana
 
 Built with a focus on robust software engineering, security by design, high observability, and clean domain boundaries, Veylix ensures strict accountability, auditability, and operational efficiency for corporate equipment, IT assets, and facilities.
 
+**Motivation Note**: Beyond solving real enterprise asset management needs, one of the core motivations of this project is to serve as a rigorous testbed to evaluate **Jules** (and the AI orchestrator agent, Antigravity) in action. It provides a highly structured, invariant-heavy environment to test autonomous code generation, peer reviews, architectural compliance, and offensive security analysis.
+
 ---
 
 ## Key Capabilities
