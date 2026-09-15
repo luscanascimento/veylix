@@ -49,6 +49,40 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
           code = "VALIDATION_ERROR";
         }
       }
+    } else if (
+      exception instanceof Error &&
+      (exception.name === "DomainError" ||
+        exception.constructor.name === "DomainError")
+    ) {
+      status = HttpStatus.UNPROCESSABLE_ENTITY;
+      code = "DOMAIN_ERROR";
+      message = exception.message;
+    } else if (
+      exception instanceof Error &&
+      "code" in exception &&
+      typeof (exception as Record<string, unknown>)["code"] === "string" &&
+      ((exception as Record<string, unknown>)["code"] as string).startsWith("P")
+    ) {
+      const prismaError = exception as {
+        code: string;
+        meta?: Record<string, unknown>;
+      };
+      if (prismaError.code === "P2002") {
+        status = HttpStatus.CONFLICT;
+        code = "CONFLICT";
+        message =
+          "Unique constraint violation: a resource with this identifier already exists.";
+      } else if (prismaError.code === "P2025") {
+        status = HttpStatus.NOT_FOUND;
+        code = "NOT_FOUND";
+        message = "Target record not found.";
+      } else {
+        this.logger.error(
+          `Unhandled Prisma exception [${prismaError.code}]: ${exception.message}`,
+          exception.stack,
+          { requestId, path: request.url, method: request.method },
+        );
+      }
     } else if (exception instanceof Error) {
       this.logger.error(
         `Unhandled exception: ${exception.message}`,

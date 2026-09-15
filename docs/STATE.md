@@ -6,15 +6,16 @@ This file tracks the active progress of the Veylix platform development across a
 
 ## Current Status
 
-- **Completed Stage**: ETAPA 3 — Domain + Database
-- **Completed Checkpoint**: CHECKPOINT C — Jules Domain & Database Review (APPROVED & MERGED)
-  - Jules Branch: `feature-etapa-3-domain-db-...` (Commit `cba0908`)
+- **Completed Stage**: ETAPA 4 — Authentication + Authorization
+- **Completed Checkpoint**: CHECKPOINT D — Jules Security Review (Offensive) (APPROVED & MERGED)
+  - Jules Commit: `fcb6108`
   - Enhancements:
-    1. Enforced Prisma composite unique constraint for proper optimistic locking (`@@unique([id, version])`).
-    2. Fixed `canTransfer` invariant to guard against transferring to the same employee.
-    3. Successfully integrated atomic transaction scope in `AssetService`.
-- **Next Stage**: ETAPA 4 — Authentication + Authorization (Sessions, JWT/Session tokens, RBAC policies, decorators)
-- **Next Checkpoint**: CHECKPOINT D — Jules Security Review (Offensive)
+    1. Integrated `cookie-parser` and implemented secure HTTP-only cookies (`veylix_session`).
+    2. Updated `AuthGuard` to read tokens safely from cookies with fallback to `Authorization` header.
+    3. Hardened `AuthService.validateSession` to sanitize selected user fields and exclude `passwordHash`.
+- **Current Stage**: ETAPA 5 — Core Asset Management (Implemented, pending review & commit)
+- **Next Stage**: ETAPA 6 — Maintenance + Audit + Observability
+- **Next Checkpoint**: CHECKPOINT E — Jules Production Readiness & Observability Audit
 
 ---
 
@@ -27,9 +28,9 @@ This file tracks the active progress of the Veylix platform development across a
 - [x] **CHECKPOINT B: Jules Frontend Review** (Merged in `11a01ea`)
 - [x] **ETAPA 3: Domain + Database** (Commit `682f625`)
 - [x] **CHECKPOINT C: Jules Domain & Database Review** (Merged in `cba0908`)
-- [ ] **ETAPA 4: Authentication + Authorization**
-- [ ] **CHECKPOINT D: Jules Security Review (Offensive)**
-- [ ] **ETAPA 5: Core Asset Management**
+- [x] **ETAPA 4: Authentication + Authorization** (Commit `fcb6108`)
+- [x] **CHECKPOINT D: Jules Security Review (Offensive)** (Merged in `fcb6108`)
+- [x] **ETAPA 5: Core Asset Management** (Ready for review)
 - [ ] **ETAPA 6: Maintenance + Audit + Observability**
 - [ ] **CHECKPOINT E: Jules Production Readiness & Observability Audit**
 - [ ] **ETAPA 7: Testing Hardening**

@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.0",
+    "@veylix/typescript-config": "workspace:*",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
     "prisma": "^6.19.3",

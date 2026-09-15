@@ -70,6 +70,49 @@ export class AssetStateMachine {
   }
 
   /**
+   * Validates if an asset can be returned from an employee custodian.
+   * Enforces INV-002, INV-003.
+   */
+  static canReturn(
+    currentStatus: AssetStatus,
+    currentAssigneeId: string | null,
+  ): boolean {
+    if (
+      currentStatus === AssetStatus.RETIRED ||
+      currentStatus === AssetStatus.LOST
+    ) {
+      throw new DomainError(`Cannot return a ${currentStatus} asset.`);
+    }
+    if (currentStatus === AssetStatus.MAINTENANCE) {
+      throw new DomainError(
+        "Cannot return an asset that is currently in maintenance.",
+      );
+    }
+    if (!currentAssigneeId) {
+      throw new DomainError(
+        "Asset does not have an assigned custodian to return.",
+      );
+    }
+    return true;
+  }
+
+  /**
+   * Validates if an asset can be retired.
+   * Enforces INV-002, INV-003.
+   */
+  static canRetire(currentStatus: AssetStatus): boolean {
+    if (currentStatus === AssetStatus.RETIRED) {
+      throw new DomainError("Asset is already retired.");
+    }
+    if (currentStatus === AssetStatus.MAINTENANCE) {
+      throw new DomainError(
+        "Cannot retire an asset that is currently in maintenance. Resolve maintenance first.",
+      );
+    }
+    return true;
+  }
+
+  /**
    * Validates if an asset can be sent to maintenance.
    */
   static canStartMaintenance(currentStatus: AssetStatus): boolean {
