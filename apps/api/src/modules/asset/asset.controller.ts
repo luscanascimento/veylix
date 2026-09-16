@@ -8,6 +8,7 @@ import {
   Body,
   HttpCode,
   HttpStatus,
+  Req,
 } from "@nestjs/common";
 import {
   ApiTags,
@@ -29,6 +30,8 @@ import {
 import { Roles } from "../../common/decorators/roles.decorator.js";
 import { CurrentUser } from "../../common/decorators/current-user.decorator.js";
 import { UserRole } from "@veylix/types";
+import { VeylixRequest } from "../../common/middleware/request-id.middleware.js";
+import { RequestAuditMeta } from "../maintenance/maintenance.service.js";
 
 interface RequestUser {
   id: string;
@@ -43,6 +46,15 @@ interface RequestUser {
 @Controller("assets")
 export class AssetController {
   constructor(private readonly assetService: AssetService) {}
+
+  private extractAuditMeta(req?: VeylixRequest): RequestAuditMeta {
+    return {
+      ipAddress: req?.ip || req?.socket?.remoteAddress || "0.0.0.0",
+      userAgent: req?.headers?.["user-agent"] || "system",
+      requestId: req?.requestId || "req_unknown",
+      traceId: req?.traceId || "trace_unknown",
+    };
+  }
 
   @Get()
   @Roles(UserRole.ADMIN, UserRole.OPERATOR, UserRole.VIEWER)
@@ -77,8 +89,9 @@ export class AssetController {
   async createAsset(
     @Body() dto: CreateAssetDto,
     @CurrentUser() user: RequestUser,
+    @Req() req: VeylixRequest,
   ) {
-    return this.assetService.createAsset(dto, user.id);
+    return this.assetService.createAsset(dto, user.id, this.extractAuditMeta(req));
   }
 
   @Patch(":id")
@@ -90,8 +103,13 @@ export class AssetController {
   @ApiResponse({ status: 200, description: "Asset updated successfully" })
   @ApiResponse({ status: 404, description: "Asset not found" })
   @ApiResponse({ status: 409, description: "Optimistic concurrency conflict" })
-  async updateAsset(@Param("id") id: string, @Body() dto: UpdateAssetDto) {
-    return this.assetService.updateAsset(id, dto);
+  async updateAsset(
+    @Param("id") id: string,
+    @Body() dto: UpdateAssetDto,
+    @CurrentUser() user: RequestUser,
+    @Req() req: VeylixRequest,
+  ) {
+    return this.assetService.updateAsset(id, dto, user.id, this.extractAuditMeta(req));
   }
 
   @Post(":id/assign")
@@ -111,8 +129,9 @@ export class AssetController {
     @Param("id") id: string,
     @Body() dto: AssignAssetDto,
     @CurrentUser() user: RequestUser,
+    @Req() req: VeylixRequest,
   ) {
-    return this.assetService.assignAsset(id, dto, user.id);
+    return this.assetService.assignAsset(id, dto, user.id, this.extractAuditMeta(req));
   }
 
   @Post(":id/transfers")
@@ -132,8 +151,9 @@ export class AssetController {
     @Param("id") id: string,
     @Body() dto: TransferAssetDto,
     @CurrentUser() user: RequestUser,
+    @Req() req: VeylixRequest,
   ) {
-    return this.assetService.transferAsset(id, dto, user.id);
+    return this.assetService.transferAsset(id, dto, user.id, this.extractAuditMeta(req));
   }
 
   @Post(":id/return")
@@ -150,8 +170,9 @@ export class AssetController {
     @Param("id") id: string,
     @Body() dto: ReturnAssetDto,
     @CurrentUser() user: RequestUser,
+    @Req() req: VeylixRequest,
   ) {
-    return this.assetService.returnAsset(id, dto, user.id);
+    return this.assetService.returnAsset(id, dto, user.id, this.extractAuditMeta(req));
   }
 
   @Post(":id/retire")
@@ -168,8 +189,9 @@ export class AssetController {
     @Param("id") id: string,
     @Body() dto: RetireAssetDto,
     @CurrentUser() user: RequestUser,
+    @Req() req: VeylixRequest,
   ) {
-    return this.assetService.retireAsset(id, dto, user.id);
+    return this.assetService.retireAsset(id, dto, user.id, this.extractAuditMeta(req));
   }
 
   @Get(":id/movements")

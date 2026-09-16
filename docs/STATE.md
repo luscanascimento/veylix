@@ -6,15 +6,8 @@ This file tracks the active progress of the Veylix platform development across a
 
 ## Current Status
 
-- **Completed Stage**: ETAPA 4 — Authentication + Authorization
-- **Completed Checkpoint**: CHECKPOINT D — Jules Security Review (Offensive) (APPROVED & MERGED)
-  - Jules Commit: `fcb6108`
-  - Enhancements:
-    1. Integrated `cookie-parser` and implemented secure HTTP-only cookies (`veylix_session`).
-    2. Updated `AuthGuard` to read tokens safely from cookies with fallback to `Authorization` header.
-    3. Hardened `AuthService.validateSession` to sanitize selected user fields and exclude `passwordHash`.
-- **Current Stage**: ETAPA 5 — Core Asset Management (Implemented, pending review & commit)
-- **Next Stage**: ETAPA 6 — Maintenance + Audit + Observability
+- **Completed Stage**: ETAPA 5 — Core Asset Management (Merged in `1f9283f`)
+- **Current Stage**: ETAPA 6 — Maintenance + Audit + Observability (Implemented, ready for review)
 - **Next Checkpoint**: CHECKPOINT E — Jules Production Readiness & Observability Audit
 
 ---
@@ -30,8 +23,8 @@ This file tracks the active progress of the Veylix platform development across a
 - [x] **CHECKPOINT C: Jules Domain & Database Review** (Merged in `cba0908`)
 - [x] **ETAPA 4: Authentication + Authorization** (Commit `fcb6108`)
 - [x] **CHECKPOINT D: Jules Security Review (Offensive)** (Merged in `fcb6108`)
-- [x] **ETAPA 5: Core Asset Management** (Ready for review)
-- [ ] **ETAPA 6: Maintenance + Audit + Observability**
+- [x] **ETAPA 5: Core Asset Management** (Merged in `1f9283f`)
+- [x] **ETAPA 6: Maintenance + Audit + Observability** (Ready for review)
 - [ ] **CHECKPOINT E: Jules Production Readiness & Observability Audit**
 - [ ] **ETAPA 7: Testing Hardening**
 - [ ] **CHECKPOINT F: Jules Test Suite Review**

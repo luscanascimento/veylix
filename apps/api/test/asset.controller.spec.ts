@@ -5,6 +5,7 @@ import { RolesGuard } from "../src/common/guards/roles.guard.js";
 import { Reflector } from "@nestjs/core";
 import { UserRole } from "@veylix/types";
 import { ForbiddenException, ExecutionContext } from "@nestjs/common";
+import { VeylixRequest } from "../src/common/middleware/request-id.middleware.js";
 
 describe("AssetController (and RBAC Authorization Guard)", () => {
   let controller: AssetController;
@@ -32,6 +33,14 @@ describe("AssetController (and RBAC Authorization Guard)", () => {
     name: "Viewer User",
     role: UserRole.VIEWER,
   };
+
+  const mockReq = {
+    ip: "127.0.0.1",
+    headers: { "user-agent": "Vitest/1.0" },
+    requestId: "req_test",
+    traceId: "trace_test",
+    socket: { remoteAddress: "127.0.0.1" },
+  } as unknown as VeylixRequest;
 
   beforeEach(() => {
     service = {
@@ -192,14 +201,24 @@ describe("AssetController (and RBAC Authorization Guard)", () => {
         purchaseDate: "2024-01-01",
         purchaseValue: 2000,
       };
-      await controller.createAsset(dto, mockUserAdmin);
-      expect(service.createAsset).toHaveBeenCalledWith(dto, "user_admin");
+      await controller.createAsset(dto, mockUserAdmin, mockReq);
+      expect(service.createAsset).toHaveBeenCalledWith(dto, "user_admin", {
+        ipAddress: "127.0.0.1",
+        requestId: "req_test",
+        traceId: "trace_test",
+        userAgent: "Vitest/1.0",
+      });
     });
 
     it("should delegate updateAsset to service", async () => {
       const dto = { name: "New Name", version: 1 };
-      await controller.updateAsset("asset_1", dto);
-      expect(service.updateAsset).toHaveBeenCalledWith("asset_1", dto);
+      await controller.updateAsset("asset_1", dto, mockUserAdmin, mockReq);
+      expect(service.updateAsset).toHaveBeenCalledWith("asset_1", dto, "user_admin", {
+        ipAddress: "127.0.0.1",
+        requestId: "req_test",
+        traceId: "trace_test",
+        userAgent: "Vitest/1.0",
+      });
     });
 
     it("should delegate assignAsset to service", async () => {
@@ -208,11 +227,17 @@ describe("AssetController (and RBAC Authorization Guard)", () => {
         toLocationId: "loc_1",
         reason: "Assign",
       };
-      await controller.assignAsset("asset_1", dto, mockUserAdmin);
+      await controller.assignAsset("asset_1", dto, mockUserAdmin, mockReq);
       expect(service.assignAsset).toHaveBeenCalledWith(
         "asset_1",
         dto,
         "user_admin",
+        {
+          ipAddress: "127.0.0.1",
+          requestId: "req_test",
+          traceId: "trace_test",
+          userAgent: "Vitest/1.0",
+        },
       );
     });
 
@@ -222,31 +247,49 @@ describe("AssetController (and RBAC Authorization Guard)", () => {
         toLocationId: "loc_2",
         reason: "Transfer",
       };
-      await controller.transferAsset("asset_1", dto, mockUserAdmin);
+      await controller.transferAsset("asset_1", dto, mockUserAdmin, mockReq);
       expect(service.transferAsset).toHaveBeenCalledWith(
         "asset_1",
         dto,
         "user_admin",
+        {
+          ipAddress: "127.0.0.1",
+          requestId: "req_test",
+          traceId: "trace_test",
+          userAgent: "Vitest/1.0",
+        },
       );
     });
 
     it("should delegate returnAsset to service", async () => {
       const dto = { toLocationId: "loc_1", reason: "Return" };
-      await controller.returnAsset("asset_1", dto, mockUserAdmin);
+      await controller.returnAsset("asset_1", dto, mockUserAdmin, mockReq);
       expect(service.returnAsset).toHaveBeenCalledWith(
         "asset_1",
         dto,
         "user_admin",
+        {
+          ipAddress: "127.0.0.1",
+          requestId: "req_test",
+          traceId: "trace_test",
+          userAgent: "Vitest/1.0",
+        },
       );
     });
 
     it("should delegate retireAsset to service", async () => {
       const dto = { reason: "Retire" };
-      await controller.retireAsset("asset_1", dto, mockUserAdmin);
+      await controller.retireAsset("asset_1", dto, mockUserAdmin, mockReq);
       expect(service.retireAsset).toHaveBeenCalledWith(
         "asset_1",
         dto,
         "user_admin",
+        {
+          ipAddress: "127.0.0.1",
+          requestId: "req_test",
+          traceId: "trace_test",
+          userAgent: "Vitest/1.0",
+        },
       );
     });
 

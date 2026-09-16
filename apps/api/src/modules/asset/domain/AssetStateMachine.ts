@@ -1,4 +1,4 @@
-import { AssetStatus, MovementType } from "@veylix/types";
+import { AssetStatus, MovementType, MaintenanceStatus } from "@veylix/types";
 
 export class DomainError extends Error {
   constructor(message: string) {
@@ -114,6 +114,7 @@ export class AssetStateMachine {
 
   /**
    * Validates if an asset can be sent to maintenance.
+   * Enforces INV-002, INV-006.
    */
   static canStartMaintenance(currentStatus: AssetStatus): boolean {
     if (
@@ -128,6 +129,36 @@ export class AssetStateMachine {
       throw new DomainError("Asset is already in maintenance.");
     }
     return true;
+  }
+
+  /**
+   * Validates if a maintenance ticket can be closed or cancelled.
+   * Enforces INV-006.
+   */
+  static canCloseMaintenance(
+    currentAssetStatus: AssetStatus | string,
+    ticketStatus: MaintenanceStatus | string,
+  ): boolean {
+    if (ticketStatus === MaintenanceStatus.COMPLETED) {
+      throw new DomainError("Maintenance ticket is already completed.");
+    }
+    if (ticketStatus === MaintenanceStatus.CANCELLED) {
+      throw new DomainError("Maintenance ticket is already cancelled.");
+    }
+    if (currentAssetStatus !== AssetStatus.MAINTENANCE) {
+      throw new DomainError(
+        `Cannot close maintenance on an asset with status ${currentAssetStatus}.`,
+      );
+    }
+    return true;
+  }
+
+  /**
+   * Determines the restored status of an asset after maintenance is completed or cancelled.
+   * Enforces INV-006.
+   */
+  static getRestoredStatusAfterMaintenance(hasAssignee: boolean): AssetStatus {
+    return hasAssignee ? AssetStatus.IN_USE : AssetStatus.AVAILABLE;
   }
 
   /**

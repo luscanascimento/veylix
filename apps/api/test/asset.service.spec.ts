@@ -238,7 +238,7 @@ describe("AssetService", () => {
       const result = await assetService.updateAsset("asset_1", {
         name: "Updated Name",
         version: 1,
-      });
+      }, "user_admin");
 
       expect(result.version).toBe(2);
       expect(mockPrisma.asset.update).toHaveBeenCalledWith(
@@ -261,7 +261,7 @@ describe("AssetService", () => {
         assetService.updateAsset("asset_1", {
           name: "Conflict Name",
           version: 1,
-        }),
+        }, "user_admin"),
       ).rejects.toThrow(ConflictException);
     });
   });
