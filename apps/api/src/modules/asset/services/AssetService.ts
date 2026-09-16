@@ -3,8 +3,10 @@ import {
   NotFoundException,
   BadRequestException,
   ConflictException,
+  Optional,
 } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service.js";
+import { AuditService } from "../../audit/audit.service.js";
 import { AssetStateMachine } from "../domain/AssetStateMachine.js";
 import { MovementType, AssetStatus } from "@veylix/types";
 import {
@@ -28,7 +30,10 @@ interface AssetRawResult {
 
 @Injectable()
 export class AssetService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly auditService?: AuditService,
+  ) {}
 
   /**
    * Generates a unique movement number.
@@ -221,6 +226,23 @@ export class AssetService {
         });
       }
 
+      if (this.auditService) {
+        await this.auditService.logEvent(
+          {
+            eventName: "ASSET_CREATED",
+            actorUserId: performedByUserId,
+            resourceType: "Asset",
+            resourceId: asset.id,
+            changes: {
+              patrimonyNumber: asset.patrimonyNumber,
+              name: asset.name,
+              status: asset.status,
+            },
+          },
+          tx,
+        );
+      }
+
       return asset;
     });
   }
@@ -368,6 +390,23 @@ export class AssetService {
         },
       });
 
+      if (this.auditService) {
+        await this.auditService.logEvent(
+          {
+            eventName: "ASSET_ASSIGNED",
+            actorUserId: performedByUserId,
+            resourceType: "Asset",
+            resourceId: assetId,
+            changes: {
+              toEmployeeId: dto.toEmployeeId,
+              toLocationId: dto.toLocationId,
+              reason: dto.reason,
+            },
+          },
+          tx,
+        );
+      }
+
       return { asset: updatedAsset, movement };
     });
   }
@@ -466,6 +505,24 @@ export class AssetService {
         },
       });
 
+      if (this.auditService) {
+        await this.auditService.logEvent(
+          {
+            eventName: "ASSET_TRANSFERRED",
+            actorUserId: performedByUserId,
+            resourceType: "Asset",
+            resourceId: assetId,
+            changes: {
+              fromEmployeeId,
+              toEmployeeId: dto.toEmployeeId,
+              toLocationId: dto.toLocationId,
+              reason: dto.reason,
+            },
+          },
+          tx,
+        );
+      }
+
       return { asset: updatedAsset, movement };
     });
   }
@@ -543,6 +600,23 @@ export class AssetService {
           performedByUserId,
         },
       });
+
+      if (this.auditService) {
+        await this.auditService.logEvent(
+          {
+            eventName: "ASSET_RETURNED",
+            actorUserId: performedByUserId,
+            resourceType: "Asset",
+            resourceId: assetId,
+            changes: {
+              fromEmployeeId: previousEmployeeId,
+              toLocationId: dto.toLocationId,
+              reason: dto.reason,
+            },
+          },
+          tx,
+        );
+      }
 
       return { asset: updatedAsset, movement };
     });
@@ -624,6 +698,23 @@ export class AssetService {
           performedByUserId,
         },
       });
+
+      if (this.auditService) {
+        await this.auditService.logEvent(
+          {
+            eventName: "ASSET_RETIRED",
+            actorUserId: performedByUserId,
+            resourceType: "Asset",
+            resourceId: assetId,
+            changes: {
+              fromEmployeeId: previousEmployeeId,
+              targetLocationId,
+              reason: dto.reason,
+            },
+          },
+          tx,
+        );
+      }
 
       return { asset: updatedAsset, movement };
     });

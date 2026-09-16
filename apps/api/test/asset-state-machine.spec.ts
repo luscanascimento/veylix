@@ -3,7 +3,7 @@ import {
   AssetStateMachine,
   DomainError,
 } from "../src/modules/asset/domain/AssetStateMachine.js";
-import { AssetStatus, MovementType } from "@veylix/types";
+import { AssetStatus, MovementType, MaintenanceStatus } from "@veylix/types";
 
 describe("AssetStateMachine (Domain Invariants)", () => {
   describe("canAssign", () => {
@@ -196,6 +196,64 @@ describe("AssetStateMachine (Domain Invariants)", () => {
       expect(
         AssetStateMachine.getNextStatusForMovement(MovementType.RETIREMENT),
       ).toBe(AssetStatus.RETIRED);
+    });
+  });
+
+  describe("canCloseMaintenance (INV-006)", () => {
+    it("should allow closing maintenance when asset is in MAINTENANCE and ticket is OPEN or IN_PROGRESS", () => {
+      expect(
+        AssetStateMachine.canCloseMaintenance(
+          AssetStatus.MAINTENANCE,
+          MaintenanceStatus.OPEN,
+        ),
+      ).toBe(true);
+      expect(
+        AssetStateMachine.canCloseMaintenance(
+          AssetStatus.MAINTENANCE,
+          MaintenanceStatus.IN_PROGRESS,
+        ),
+      ).toBe(true);
+    });
+
+    it("should throw DomainError when ticket is already COMPLETED", () => {
+      expect(() =>
+        AssetStateMachine.canCloseMaintenance(
+          AssetStatus.MAINTENANCE,
+          MaintenanceStatus.COMPLETED,
+        ),
+      ).toThrow("Maintenance ticket is already completed.");
+    });
+
+    it("should throw DomainError when ticket is already CANCELLED", () => {
+      expect(() =>
+        AssetStateMachine.canCloseMaintenance(
+          AssetStatus.MAINTENANCE,
+          MaintenanceStatus.CANCELLED,
+        ),
+      ).toThrow("Maintenance ticket is already cancelled.");
+    });
+
+    it("should throw DomainError when asset is not in MAINTENANCE status", () => {
+      expect(() =>
+        AssetStateMachine.canCloseMaintenance(
+          AssetStatus.AVAILABLE,
+          MaintenanceStatus.OPEN,
+        ),
+      ).toThrow("Cannot close maintenance on an asset with status AVAILABLE.");
+    });
+  });
+
+  describe("getRestoredStatusAfterMaintenance (INV-006)", () => {
+    it("should restore status to IN_USE if asset has an assigned employee custodian", () => {
+      expect(AssetStateMachine.getRestoredStatusAfterMaintenance(true)).toBe(
+        AssetStatus.IN_USE,
+      );
+    });
+
+    it("should restore status to AVAILABLE if asset has no assigned employee custodian", () => {
+      expect(AssetStateMachine.getRestoredStatusAfterMaintenance(false)).toBe(
+        AssetStatus.AVAILABLE,
+      );
     });
   });
 });
