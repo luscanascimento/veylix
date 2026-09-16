@@ -3,8 +3,10 @@ import {
   NotFoundException,
   BadRequestException,
   ConflictException,
+  Optional,
 } from "@nestjs/common";
 import { PrismaService } from "../../prisma/prisma.service.js";
+import { AuditService } from "../../audit/audit.service.js";
 import { AssetStateMachine } from "../domain/AssetStateMachine.js";
 import { MovementType, AssetStatus } from "@veylix/types";
 import {
@@ -17,6 +19,7 @@ import {
   RetireAssetDto,
 } from "../dto/index.js";
 import { Prisma } from "@prisma/client";
+import { RequestAuditMeta } from "../../maintenance/maintenance.service.js";
 
 interface AssetRawResult {
   id: string;
@@ -28,7 +31,10 @@ interface AssetRawResult {
 
 @Injectable()
 export class AssetService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly auditService?: AuditService,
+  ) {}
 
   /**
    * Generates a unique movement number.
@@ -141,7 +147,11 @@ export class AssetService {
   /**
    * Creates a new physical asset, validating relations and creating initial assignment movement if applicable.
    */
-  async createAsset(dto: CreateAssetDto, performedByUserId: string) {
+  async createAsset(
+    dto: CreateAssetDto,
+    performedByUserId: string,
+    meta?: RequestAuditMeta,
+  ) {
     // Validate Category exists & active
     const category = await this.prisma.category.findUnique({
       where: { id: dto.categoryId },
@@ -221,6 +231,27 @@ export class AssetService {
         });
       }
 
+      if (this.auditService) {
+        await this.auditService.logEvent(
+          {
+            eventName: "ASSET_CREATED",
+            actorUserId: performedByUserId,
+            ipAddress: meta?.ipAddress,
+            userAgent: meta?.userAgent,
+            requestId: meta?.requestId,
+            traceId: meta?.traceId,
+            resourceType: "Asset",
+            resourceId: asset.id,
+            changes: {
+              patrimonyNumber: asset.patrimonyNumber,
+              name: asset.name,
+              status: asset.status,
+            },
+          },
+          tx,
+        );
+      }
+
       return asset;
     });
   }
@@ -228,7 +259,12 @@ export class AssetService {
   /**
    * Updates asset descriptive fields guarded by optimistic concurrency locking (INV-007).
    */
-  async updateAsset(id: string, dto: UpdateAssetDto) {
+  async updateAsset(
+    id: string,
+    dto: UpdateAssetDto,
+    performedByUserId: string,
+    meta?: RequestAuditMeta,
+  ) {
     if (dto.categoryId) {
       const category = await this.prisma.category.findUnique({
         where: { id: dto.categoryId },
@@ -239,7 +275,7 @@ export class AssetService {
     }
 
     try {
-      return await this.prisma.asset.update({
+      const updatedAsset = await this.prisma.asset.update({
         where: {
           idx_assets_id_version: {
             id,
@@ -271,6 +307,23 @@ export class AssetService {
           assignedEmployee: true,
         },
       });
+
+      if (this.auditService) {
+        await this.auditService.logEvent({
+          eventName: "ASSET_UPDATED",
+          actorUserId: performedByUserId,
+          ipAddress: meta?.ipAddress,
+          userAgent: meta?.userAgent,
+          requestId: meta?.requestId,
+          traceId: meta?.traceId,
+          resourceType: "Asset",
+          resourceId: id,
+          changes: {
+            ...dto,
+          },
+        });
+      }
+      return updatedAsset;
     } catch (error: unknown) {
       const prismaError = error as { code?: string };
       if (prismaError?.code === "P2025") {
@@ -294,6 +347,7 @@ export class AssetService {
     assetId: string,
     dto: AssignAssetDto,
     performedByUserId: string,
+    meta?: RequestAuditMeta,
   ) {
     const employee = await this.prisma.employee.findUnique({
       where: { id: dto.toEmployeeId },
@@ -368,6 +422,27 @@ export class AssetService {
         },
       });
 
+      if (this.auditService) {
+        await this.auditService.logEvent(
+          {
+            eventName: "ASSET_ASSIGNED",
+            actorUserId: performedByUserId,
+            ipAddress: meta?.ipAddress,
+            userAgent: meta?.userAgent,
+            requestId: meta?.requestId,
+            traceId: meta?.traceId,
+            resourceType: "Asset",
+            resourceId: assetId,
+            changes: {
+              toEmployeeId: dto.toEmployeeId,
+              toLocationId: dto.toLocationId,
+              reason: dto.reason,
+            },
+          },
+          tx,
+        );
+      }
+
       return { asset: updatedAsset, movement };
     });
   }
@@ -380,6 +455,7 @@ export class AssetService {
     assetId: string,
     dto: TransferAssetDto,
     performedByUserId: string,
+    meta?: RequestAuditMeta,
   ) {
     const employee = await this.prisma.employee.findUnique({
       where: { id: dto.toEmployeeId },
@@ -466,6 +542,28 @@ export class AssetService {
         },
       });
 
+      if (this.auditService) {
+        await this.auditService.logEvent(
+          {
+            eventName: "ASSET_TRANSFERRED",
+            actorUserId: performedByUserId,
+            ipAddress: meta?.ipAddress,
+            userAgent: meta?.userAgent,
+            requestId: meta?.requestId,
+            traceId: meta?.traceId,
+            resourceType: "Asset",
+            resourceId: assetId,
+            changes: {
+              fromEmployeeId,
+              toEmployeeId: dto.toEmployeeId,
+              toLocationId: dto.toLocationId,
+              reason: dto.reason,
+            },
+          },
+          tx,
+        );
+      }
+
       return { asset: updatedAsset, movement };
     });
   }
@@ -478,6 +576,7 @@ export class AssetService {
     assetId: string,
     dto: ReturnAssetDto,
     performedByUserId: string,
+    meta?: RequestAuditMeta,
   ) {
     const location = await this.prisma.location.findUnique({
       where: { id: dto.toLocationId },
@@ -544,6 +643,27 @@ export class AssetService {
         },
       });
 
+      if (this.auditService) {
+        await this.auditService.logEvent(
+          {
+            eventName: "ASSET_RETURNED",
+            actorUserId: performedByUserId,
+            ipAddress: meta?.ipAddress,
+            userAgent: meta?.userAgent,
+            requestId: meta?.requestId,
+            traceId: meta?.traceId,
+            resourceType: "Asset",
+            resourceId: assetId,
+            changes: {
+              fromEmployeeId: previousEmployeeId,
+              toLocationId: dto.toLocationId,
+              reason: dto.reason,
+            },
+          },
+          tx,
+        );
+      }
+
       return { asset: updatedAsset, movement };
     });
   }
@@ -556,6 +676,7 @@ export class AssetService {
     assetId: string,
     dto: RetireAssetDto,
     performedByUserId: string,
+    meta?: RequestAuditMeta,
   ) {
     if (dto.toLocationId) {
       const location = await this.prisma.location.findUnique({
@@ -624,6 +745,27 @@ export class AssetService {
           performedByUserId,
         },
       });
+
+      if (this.auditService) {
+        await this.auditService.logEvent(
+          {
+            eventName: "ASSET_RETIRED",
+            actorUserId: performedByUserId,
+            ipAddress: meta?.ipAddress,
+            userAgent: meta?.userAgent,
+            requestId: meta?.requestId,
+            traceId: meta?.traceId,
+            resourceType: "Asset",
+            resourceId: assetId,
+            changes: {
+              fromEmployeeId: previousEmployeeId,
+              targetLocationId,
+              reason: dto.reason,
+            },
+          },
+          tx,
+        );
+      }
 
       return { asset: updatedAsset, movement };
     });

@@ -6,16 +6,17 @@ This file tracks the active progress of the Veylix platform development across a
 
 ## Current Status
 
-- **Completed Stage**: ETAPA 4 — Authentication + Authorization
-- **Completed Checkpoint**: CHECKPOINT D — Jules Security Review (Offensive) (APPROVED & MERGED)
-  - Jules Commit: `fcb6108`
+- **Completed Stage**: ETAPA 6 — Maintenance + Audit + Observability
+- **Completed Checkpoint**: CHECKPOINT E — Jules Production Readiness & Observability Audit (APPROVED)
+  - Jules Commit: `b04f581`
   - Enhancements:
-    1. Integrated `cookie-parser` and implemented secure HTTP-only cookies (`veylix_session`).
-    2. Updated `AuthGuard` to read tokens safely from cookies with fallback to `Authorization` header.
-    3. Hardened `AuthService.validateSession` to sanitize selected user fields and exclude `passwordHash`.
-- **Current Stage**: ETAPA 5 — Core Asset Management (Implemented, pending review & commit)
-- **Next Stage**: ETAPA 6 — Maintenance + Audit + Observability
-- **Next Checkpoint**: CHECKPOINT E — Jules Production Readiness & Observability Audit
+    1. Complete audit metadata extraction in `AssetController` (`ipAddress`, `userAgent`, `requestId`, `traceId`).
+    2. Propagation of audit metadata across all mutating asset operations (`create`, `update`, `assign`, `transfer`, `return`, `retire`).
+    3. Added explicit `ASSET_UPDATED` audit event in `AssetService.updateAsset`.
+    4. Defensive extraction in controllers with safe fallbacks to prevent runtime crashes.
+    5. Unit test coverage updated with mocked request objects.
+- **Next Stage**: ETAPA 7 — Testing Hardening
+- **Next Checkpoint**: CHECKPOINT F — Jules Test Suite Review
 
 ---
 
@@ -30,9 +31,9 @@ This file tracks the active progress of the Veylix platform development across a
 - [x] **CHECKPOINT C: Jules Domain & Database Review** (Merged in `cba0908`)
 - [x] **ETAPA 4: Authentication + Authorization** (Commit `fcb6108`)
 - [x] **CHECKPOINT D: Jules Security Review (Offensive)** (Merged in `fcb6108`)
-- [x] **ETAPA 5: Core Asset Management** (Ready for review)
-- [ ] **ETAPA 6: Maintenance + Audit + Observability**
-- [ ] **CHECKPOINT E: Jules Production Readiness & Observability Audit**
+- [x] **ETAPA 5: Core Asset Management** (Merged in `1f9283f`)
+- [x] **ETAPA 6: Maintenance + Audit + Observability** (Commit `70a43b5`)
+- [x] **CHECKPOINT E: Jules Production Readiness & Observability Audit** (Commit `b04f581`)
 - [ ] **ETAPA 7: Testing Hardening**
 - [ ] **CHECKPOINT F: Jules Test Suite Review**
 - [ ] **ETAPA 8: Production Hardening**
