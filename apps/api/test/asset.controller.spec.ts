@@ -213,12 +213,17 @@ describe("AssetController (and RBAC Authorization Guard)", () => {
     it("should delegate updateAsset to service", async () => {
       const dto = { name: "New Name", version: 1 };
       await controller.updateAsset("asset_1", dto, mockUserAdmin, mockReq);
-      expect(service.updateAsset).toHaveBeenCalledWith("asset_1", dto, "user_admin", {
-        ipAddress: "127.0.0.1",
-        requestId: "req_test",
-        traceId: "trace_test",
-        userAgent: "Vitest/1.0",
-      });
+      expect(service.updateAsset).toHaveBeenCalledWith(
+        "asset_1",
+        dto,
+        "user_admin",
+        {
+          ipAddress: "127.0.0.1",
+          requestId: "req_test",
+          traceId: "trace_test",
+          userAgent: "Vitest/1.0",
+        },
+      );
     });
 
     it("should delegate assignAsset to service", async () => {

@@ -91,7 +91,11 @@ export class AssetController {
     @CurrentUser() user: RequestUser,
     @Req() req: VeylixRequest,
   ) {
-    return this.assetService.createAsset(dto, user.id, this.extractAuditMeta(req));
+    return this.assetService.createAsset(
+      dto,
+      user.id,
+      this.extractAuditMeta(req),
+    );
   }
 
   @Patch(":id")
@@ -109,7 +113,12 @@ export class AssetController {
     @CurrentUser() user: RequestUser,
     @Req() req: VeylixRequest,
   ) {
-    return this.assetService.updateAsset(id, dto, user.id, this.extractAuditMeta(req));
+    return this.assetService.updateAsset(
+      id,
+      dto,
+      user.id,
+      this.extractAuditMeta(req),
+    );
   }
 
   @Post(":id/assign")
@@ -131,7 +140,12 @@ export class AssetController {
     @CurrentUser() user: RequestUser,
     @Req() req: VeylixRequest,
   ) {
-    return this.assetService.assignAsset(id, dto, user.id, this.extractAuditMeta(req));
+    return this.assetService.assignAsset(
+      id,
+      dto,
+      user.id,
+      this.extractAuditMeta(req),
+    );
   }
 
   @Post(":id/transfers")
@@ -153,7 +167,12 @@ export class AssetController {
     @CurrentUser() user: RequestUser,
     @Req() req: VeylixRequest,
   ) {
-    return this.assetService.transferAsset(id, dto, user.id, this.extractAuditMeta(req));
+    return this.assetService.transferAsset(
+      id,
+      dto,
+      user.id,
+      this.extractAuditMeta(req),
+    );
   }
 
   @Post(":id/return")
@@ -172,7 +191,12 @@ export class AssetController {
     @CurrentUser() user: RequestUser,
     @Req() req: VeylixRequest,
   ) {
-    return this.assetService.returnAsset(id, dto, user.id, this.extractAuditMeta(req));
+    return this.assetService.returnAsset(
+      id,
+      dto,
+      user.id,
+      this.extractAuditMeta(req),
+    );
   }
 
   @Post(":id/retire")
@@ -191,7 +215,12 @@ export class AssetController {
     @CurrentUser() user: RequestUser,
     @Req() req: VeylixRequest,
   ) {
-    return this.assetService.retireAsset(id, dto, user.id, this.extractAuditMeta(req));
+    return this.assetService.retireAsset(
+      id,
+      dto,
+      user.id,
+      this.extractAuditMeta(req),
+    );
   }
 
   @Get(":id/movements")
