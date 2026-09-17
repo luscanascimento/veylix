@@ -49,7 +49,7 @@ This document details the STRIDE threat analysis for the Veylix enterprise asset
   - NestJS body parser size capped at 1MB.
   - Pagination query DTOs enforce strict maximum limit (`limit <= 100`).
   - Rate limiting per IP and per authenticated user.
-- **Verification Test**: `tests/security/rate-limit/rate-limiting.spec.ts`.
+- **Verification Test**: `apps/api/test/throttler.spec.ts`.
 
 ### 1.6 Elevation of Privilege
 
