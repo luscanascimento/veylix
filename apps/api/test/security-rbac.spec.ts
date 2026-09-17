@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { RolesGuard } from "../src/common/guards/roles.guard.js";
 import { Reflector } from "@nestjs/core";
 import { ExecutionContext, ForbiddenException } from "@nestjs/common";
@@ -25,7 +25,7 @@ describe("Security RBAC Matrix (Positive and Negative Auth Tests)", () => {
 
   function createMockExecutionContext(
     handler: (...args: never[]) => unknown,
-    controllerClass: Function,
+    controllerClass: unknown,
     user?: unknown,
   ): ExecutionContext {
     return {
@@ -359,7 +359,11 @@ describe("Security RBAC Matrix (Positive and Negative Auth Tests)", () => {
       for (const handler of [listHandler, getHandler]) {
         expect(
           rolesGuard.canActivate(
-            createMockExecutionContext(handler, MaintenanceController, adminUser),
+            createMockExecutionContext(
+              handler,
+              MaintenanceController,
+              adminUser,
+            ),
           ),
         ).toBe(true);
         expect(
