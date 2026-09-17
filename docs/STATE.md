@@ -35,6 +35,6 @@ This file tracks the active progress of the Veylix platform development across a
 - [x] **CHECKPOINT E: Jules Production Readiness & Observability Audit** (Commit `b04f581`)
 - [x] **ETAPA 7: Testing Hardening** (Commit `33ee9f2`)
 - [x] **CHECKPOINT F: Jules Test Suite Review** (Merged in `1e19864`)
-- [x] **ETAPA 8: Production Hardening** (Merged in `b041cb8`)
+- [x] **ETAPA 8: Production Hardening** (Commit pending)
 - [ ] **CHECKPOINT G: Jules Production Readiness Review**
 - [ ] **ETAPA 9: Final Review (`docs/final-review.md`)**
