@@ -6,16 +6,21 @@ This file tracks the active progress of the Veylix platform development across a
 
 ## Current Status
 
-- **Platform Status**: **100% COMPLETE & PRODUCTION READY**
-- **Final Stage**: ETAPA 9 — Final Review (`docs/final-review.md`) (COMPLETED)
-  - Comprehensive architectural, security, testing, and operational sign-off recorded in `docs/final-review.md`.
-  - All 7 checkpoints (A through G) reviewed and approved independently by Jules.
-  - All 186 automated tests passing across API, Web, Validation, and UI suites.
-  - Zero technical debt, zero known vulnerabilities, and full Definition of Done (DoD) compliance.
+- **Phase**: Phase 2 — Product Completion, Security Hardening & Production Readiness
+- **Completed Stage**: FASE 0 — Baseline e Auditoria Factual (`docs/current-state-assessment.md`)
+- **Current Checkpoint**: CHECKPOINT 1 — Jules Review of Current State Assessment (PENDING)
+  - Scope:
+    1. Independent review of `docs/current-state-assessment.md`.
+    2. Challenge conclusions on `SEC/OPS-001` (Health check auth guard 401 cascade) and `SEC/OPS-002` (X-Request-Id length & injection vs PostgreSQL `VarChar(64)`).
+    3. Evaluate frontend mock inventory vs real API gaps.
+    4. Validate architectural and documentation drift (OpenTelemetry and Prometheus absence).
+- **Next Stage**: FASE 1 — Core Fixes & Real Frontend Workflows
 
 ---
 
 ## Roadmap & Checkpoints Progress
+
+### Phase 1: Architectural Scaffolding & Foundations
 
 - [x] **ETAPA 0: Discovery + Architecture** (Commit `15032bf`)
 - [x] **CHECKPOINT A: Jules Architecture Review** (Merged in `f804d7c`)
@@ -32,5 +37,17 @@ This file tracks the active progress of the Veylix platform development across a
 - [x] **ETAPA 7: Testing Hardening** (Commit `33ee9f2`)
 - [x] **CHECKPOINT F: Jules Test Suite Review** (Merged in `1e19864`)
 - [x] **ETAPA 8: Production Hardening** (Merged in `b041cb8`)
-- [x] **CHECKPOINT G: Jules Production Readiness Review** (Approved in `14861094418357084445`)
-- [x] **ETAPA 9: Final Review (`docs/final-review.md`)**
+- [x] **CHECKPOINT G: Jules Production Readiness Review** (Completed in Session `14861094418357084445`)
+
+### Phase 2: Product Completion, Security Hardening & Production Readiness
+
+- [x] **FASE 0: Baseline & Factual Audit** (`docs/current-state-assessment.md`)
+- [ ] **CHECKPOINT 1: Jules Review of Current-State Assessment**
+- [ ] **FASE 1: Core Fixes & Real Frontend Workflows**
+- [ ] **CHECKPOINT 2: Jules Frontend Review**
+- [ ] **FASE 2: Security Hardening & Concurrency**
+- [ ] **CHECKPOINT 3: Jules Offensive Security Audit**
+- [ ] **FASE 3: Observability & Production Probes**
+- [ ] **CHECKPOINT 4: Jules Observability Audit**
+- [ ] **FASE 4: Hardened Testing & Performance Verification**
+- [ ] **CHECKPOINT 5: Final Production Review**
