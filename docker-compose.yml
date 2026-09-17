@@ -4,19 +4,88 @@ services:
     container_name: veylix-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: veylix_user
-      POSTGRES_PASSWORD: veylix_secret_pass
-      POSTGRES_DB: veylix_db
+      POSTGRES_USER: ${POSTGRES_USER:-veylix_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-veylix_secret_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-veylix_db}
     ports:
       - "5433:5432"
     volumes:
       - veylix_pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U veylix_user -d veylix_db"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-veylix_user} -d ${POSTGRES_DB:-veylix_db}",
+        ]
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - veylix-network
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: veylix-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://${POSTGRES_USER:-veylix_user}:${POSTGRES_PASSWORD:-veylix_secret_pass}@postgres:5432/${POSTGRES_DB:-veylix_db}?schema=public
+      CORS_ORIGINS: http://localhost:3000
+      SESSION_SECRET: ${SESSION_SECRET:-veylix_production_secret_key_minimum_32_characters}
+      LOG_LEVEL: info
+    ports:
+      - "4000:4000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:4000/health/liveness || exit 1",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - veylix-network
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: veylix-web
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: http://localhost:4000
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - veylix-network
 
 volumes:
   veylix_pgdata:
     driver: local
+
+networks:
+  veylix-network:
+    driver: bridge

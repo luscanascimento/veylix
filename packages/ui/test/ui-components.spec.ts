@@ -14,7 +14,25 @@ describe("UI Design System Primitives & Tokens", () => {
     expect(spacing.radius.full).toBe("9999px");
   });
 
-  it("should export status badge component", () => {
-    expect(StatusBadge).toBeDefined();
+  it("should render correct badge variant and label for all asset lifecycle statuses", () => {
+    const testCases: [AssetStatus, string, string][] = [
+      [AssetStatus.AVAILABLE, "success", "Available"],
+      [AssetStatus.IN_USE, "default", "In Use"],
+      [AssetStatus.MAINTENANCE, "warning", "Maintenance"],
+      [AssetStatus.RETIRED, "secondary", "Retired"],
+      [AssetStatus.LOST, "destructive", "Lost"],
+    ];
+
+    for (const [status, expectedVariant, expectedLabel] of testCases) {
+      const element = StatusBadge({ status });
+      expect(element.props.variant).toBe(expectedVariant);
+      expect(element.props.children).toBe(expectedLabel);
+    }
+  });
+
+  it("should fallback to outline variant and display string for unknown status", () => {
+    const element = StatusBadge({ status: "CUSTOM_STATE" });
+    expect(element.props.variant).toBe("outline");
+    expect(element.props.children).toBe("CUSTOM_STATE");
   });
 });

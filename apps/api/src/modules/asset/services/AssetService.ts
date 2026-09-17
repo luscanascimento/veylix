@@ -310,19 +310,22 @@ export class AssetService {
         });
 
         if (this.auditService) {
-          await this.auditService.logEvent({
-            eventName: "ASSET_UPDATED",
-            actorUserId: performedByUserId,
-            ipAddress: meta?.ipAddress,
-            userAgent: meta?.userAgent,
-            requestId: meta?.requestId,
-            traceId: meta?.traceId,
-            resourceType: "Asset",
-            resourceId: id,
-            changes: {
-              ...dto,
+          await this.auditService.logEvent(
+            {
+              eventName: "ASSET_UPDATED",
+              actorUserId: performedByUserId,
+              ipAddress: meta?.ipAddress,
+              userAgent: meta?.userAgent,
+              requestId: meta?.requestId,
+              traceId: meta?.traceId,
+              resourceType: "Asset",
+              resourceId: id,
+              changes: {
+                ...dto,
+              },
             },
-          }, tx);
+            tx,
+          );
         }
         return updatedAsset;
       });

@@ -6,9 +6,16 @@ This file tracks the active progress of the Veylix platform development across a
 
 ## Current Status
 
-- **Completed Stage**: ETAPA 5 — Core Asset Management (Merged in `1f9283f`)
-- **Current Stage**: ETAPA 6 — Maintenance + Audit + Observability (Implemented, ready for review)
-- **Next Checkpoint**: CHECKPOINT E — Jules Production Readiness & Observability Audit
+- **Completed Stage**: ETAPA 8 — Production Hardening
+- **Current Checkpoint**: CHECKPOINT G — Jules Production Readiness Review (PENDING)
+  - Scope:
+    1. DoS / Rate Limiting protection (`@nestjs/throttler`) with IP-based limits globally (100 req/min) and strict limits on `/api/auth/login` (10 req/min).
+    2. Health probes protection (`@SkipThrottle` on `HealthController`).
+    3. Security Headers & Payload Size Limits (Helmet CSP, HSTS, Express `json({ limit: "1mb" })`).
+    4. Production Multi-Stage Dockerfiles (`apps/api/Dockerfile`, `apps/web/Dockerfile`, `.dockerignore`, `docker-compose.yml` with healthchecks).
+    5. Database connection resilience & graceful shutdown hooks.
+    6. Full DoD verification across all workspaces (184 tests passing).
+- **Next Stage**: ETAPA 9 — Final Review (`docs/final-review.md`)
 
 ---
 
@@ -24,10 +31,10 @@ This file tracks the active progress of the Veylix platform development across a
 - [x] **ETAPA 4: Authentication + Authorization** (Commit `fcb6108`)
 - [x] **CHECKPOINT D: Jules Security Review (Offensive)** (Merged in `fcb6108`)
 - [x] **ETAPA 5: Core Asset Management** (Merged in `1f9283f`)
-- [x] **ETAPA 6: Maintenance + Audit + Observability** (Ready for review)
-- [ ] **CHECKPOINT E: Jules Production Readiness & Observability Audit**
-- [ ] **ETAPA 7: Testing Hardening**
-- [ ] **CHECKPOINT F: Jules Test Suite Review**
-- [ ] **ETAPA 8: Production Hardening**
+- [x] **ETAPA 6: Maintenance + Audit + Observability** (Commit `70a43b5`)
+- [x] **CHECKPOINT E: Jules Production Readiness & Observability Audit** (Commit `b04f581`)
+- [x] **ETAPA 7: Testing Hardening** (Commit `33ee9f2`)
+- [x] **CHECKPOINT F: Jules Test Suite Review** (Merged in `1e19864`)
+- [x] **ETAPA 8: Production Hardening** (Merged in `b041cb8`)
 - [ ] **CHECKPOINT G: Jules Production Readiness Review**
 - [ ] **ETAPA 9: Final Review (`docs/final-review.md`)**
