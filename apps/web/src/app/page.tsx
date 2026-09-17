@@ -82,6 +82,23 @@ const mockMovements: MockAssetMovement[] = [
 export default function DashboardPage() {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [page, setPage] = React.useState(1);
+  const [stats, setStats] = React.useState<any>(null);
+  const [statsLoading, setStatsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const { fetchApi } = await import("@/lib/api-client");
+        const data = await fetchApi("/dashboard/stats");
+        setStats(data);
+      } catch (err) {
+        console.error("Failed to load dashboard stats", err);
+      } finally {
+        setStatsLoading(false);
+      }
+    };
+    loadStats();
+  }, []);
 
   const filteredMovements = React.useMemo(() => {
     if (!searchTerm) return mockMovements;
@@ -154,6 +171,14 @@ export default function DashboardPage() {
     },
   ];
 
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0,
+    }).format(value);
+  };
+
   return (
     <div className="space-y-8 animate-in fade-in-50">
       <PageHeader
@@ -177,28 +202,26 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Total Assets"
-          value="1,428"
+          value={statsLoading ? "..." : stats?.totalAssets?.toString() || "0"}
           description="Tracked corporate physical assets"
           icon={Laptop}
-          trend={{ value: "+12 this month", positive: true }}
+          trend={{ value: "Total active in db", positive: true }}
         />
         <StatCard
           title="Active in Custody"
-          value="1,180"
+          value={statsLoading ? "..." : stats?.inCustody?.toString() || "0"}
           description="Assigned to verified employees"
           icon={CheckCircle2}
-          trend={{ value: "82.6% utilization", positive: true }}
         />
         <StatCard
           title="In Maintenance"
-          value="42"
+          value={statsLoading ? "..." : stats?.inMaintenance?.toString() || "0"}
           description="Open work orders & tech service"
           icon={Wrench}
-          trend={{ value: "2 critical", positive: false }}
         />
         <StatCard
           title="Total Valuation"
-          value="$2.84M"
+          value={statsLoading ? "..." : stats ? formatCurrency(stats.totalValuation) : "$0"}
           description="Acquisition capital value"
           icon={DollarSign}
         />

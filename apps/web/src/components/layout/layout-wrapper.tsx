@@ -1,11 +1,17 @@
 "use client";
 
 import * as React from "react";
+import { usePathname } from "next/navigation";
 import { Sidebar } from "./sidebar";
 import { Header } from "./header";
 
 export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const pathname = usePathname();
+
+  if (pathname === "/login") {
+    return <main>{children}</main>;
+  }
 
   return (
     <div className="flex min-h-screen">

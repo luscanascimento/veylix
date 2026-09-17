@@ -37,6 +37,8 @@ const navItems: NavItem[] = [
   { label: "Settings", href: "/settings", icon: Settings },
 ];
 
+import { useAuth } from "@/contexts/auth-context";
+
 export interface SidebarProps {
   mobileOpen?: boolean;
   onMobileClose?: () => void;
@@ -44,6 +46,7 @@ export interface SidebarProps {
 
 export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
+  const { user } = useAuth();
 
   return (
     <>
@@ -120,17 +123,17 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         <div className="border-t border-slate-200 p-4 dark:border-slate-800">
           <div className="flex items-center gap-3 rounded-lg bg-slate-50 p-2.5 dark:bg-slate-900">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-200 text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-300">
-              AD
+              {user?.name?.slice(0, 2).toUpperCase() || "UN"}
             </div>
             <div className="flex-1 overflow-hidden">
               <p className="text-xs font-semibold text-slate-900 truncate dark:text-slate-100">
-                Administrator
+                {user?.name || "Loading..."}
               </p>
               <p className="text-[10px] text-slate-500 truncate dark:text-slate-400">
-                admin@veylix.corp
+                {user?.email || ""}
               </p>
             </div>
-            <span className="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+            <span className={cn("inline-block h-2 w-2 rounded-full", user ? "bg-emerald-500" : "bg-slate-300")}></span>
           </div>
         </div>
       </aside>
