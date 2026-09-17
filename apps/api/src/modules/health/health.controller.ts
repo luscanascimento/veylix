@@ -1,8 +1,10 @@
 import { Controller, Get, Res, HttpStatus } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { Response } from "express";
+import { SkipThrottle } from "@nestjs/throttler";
 import { HealthService } from "./health.service.js";
 
+@SkipThrottle()
 @ApiTags("Health")
 @Controller("health")
 export class HealthController {
