@@ -3,14 +3,12 @@ import { ValidationPipe } from "@nestjs/common";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
-import { json, urlencoded } from "express";
 import { AppModule } from "./app.module.js";
 import { AppLogger } from "./common/logger/pino.logger.js";
 import { GlobalHttpExceptionFilter } from "./common/filters/http-exception.filter.js";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    bodyParser: false,
     bufferLogs: true,
   });
 
@@ -18,30 +16,7 @@ async function bootstrap() {
   app.useLogger(logger);
 
   // Security Headers
-  app.use(
-    helmet({
-      contentSecurityPolicy: {
-        directives: {
-          defaultSrc: ["'self'"],
-          scriptSrc: ["'self'", "'unsafe-inline'"],
-          styleSrc: ["'self'", "'unsafe-inline'"],
-          imgSrc: ["'self'", "data:", "blob:"],
-          fontSrc: ["'self'"],
-          objectSrc: ["'none'"],
-          frameAncestors: ["'none'"],
-        },
-      },
-      hsts: {
-        maxAge: 31536000,
-        includeSubDomains: true,
-        preload: true,
-      },
-    }),
-  );
-
-  // Request Body Payload Size Limits (1MB)
-  app.use(json({ limit: "1mb" }));
-  app.use(urlencoded({ extended: true, limit: "1mb" }));
+  app.use(helmet());
 
   // Cookie Parser
   app.use(cookieParser());

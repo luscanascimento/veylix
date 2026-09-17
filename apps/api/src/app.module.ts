@@ -16,7 +16,6 @@ import { MaintenanceModule } from "./modules/maintenance/maintenance.module.js";
 import { RequestIdMiddleware } from "./common/middleware/request-id.middleware.js";
 import { AuthGuard } from "./common/guards/auth.guard.js";
 import { RolesGuard } from "./common/guards/roles.guard.js";
-import { ThrottlerModule, ThrottlerGuard } from "@nestjs/throttler";
 
 @Module({
   imports: [
@@ -35,19 +34,8 @@ import { ThrottlerModule, ThrottlerGuard } from "@nestjs/throttler";
     EmployeeModule,
     AuditModule,
     MaintenanceModule,
-    ThrottlerModule.forRoot([
-      {
-        name: "default",
-        ttl: 60000,
-        limit: 100,
-      },
-    ]),
   ],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
