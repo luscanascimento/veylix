@@ -20,101 +20,67 @@ import {
   Filter,
 } from "lucide-react";
 
-interface MockAssetMovement {
-  id: string;
-  movementNumber: string;
-  patrimonyNumber: string;
-  assetName: string;
-  type: string;
-  custodian: string;
-  location: string;
-  status: AssetStatus;
-  date: string;
-}
 
-const mockMovements: MockAssetMovement[] = [
-  {
-    id: "mov_1",
-    movementNumber: "MOV-2026-0042",
-    patrimonyNumber: "AST-2026-0182",
-    assetName: 'MacBook Pro 16" M3 Max',
-    type: "ASSIGNMENT",
-    custodian: "Lucas Nascimento",
-    location: "HQ - Floor 3 (Engineering)",
-    status: AssetStatus.IN_USE,
-    date: "2026-09-09 18:30",
-  },
-  {
-    id: "mov_2",
-    movementNumber: "MOV-2026-0041",
-    patrimonyNumber: "AST-2026-0094",
-    assetName: 'Dell UltraSharp 32" 4K',
-    type: "TRANSFER",
-    custodian: "Mariana Silva",
-    location: "HQ - Floor 2 (Design)",
-    status: AssetStatus.IN_USE,
-    date: "2026-09-09 16:15",
-  },
-  {
-    id: "mov_3",
-    movementNumber: "MOV-2026-0040",
-    patrimonyNumber: "AST-2026-0310",
-    assetName: "ThinkPad P1 Gen 6",
-    type: "RETURN",
-    custodian: "IT Storage Pool",
-    location: "HQ - Floor 1 (IT Warehouse)",
-    status: AssetStatus.AVAILABLE,
-    date: "2026-09-09 14:00",
-  },
-  {
-    id: "mov_4",
-    movementNumber: "MOV-2026-0039",
-    patrimonyNumber: "AST-2026-0012",
-    assetName: "Cisco Catalyst 9300 Switch",
-    type: "MAINTENANCE",
-    custodian: "Tech Lab Repair",
-    location: "Server Room B",
-    status: AssetStatus.MAINTENANCE,
-    date: "2026-09-08 11:20",
-  },
-];
 
 export default function DashboardPage() {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [page, setPage] = React.useState(1);
   const [stats, setStats] = React.useState<any>(null);
   const [statsLoading, setStatsLoading] = React.useState(true);
+  const [movements, setMovements] = React.useState<any[]>([]);
+  const [movementsLoading, setMovementsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    const loadStats = async () => {
+    const loadData = async () => {
       try {
         const { fetchApi } = await import("@/lib/api-client");
-        const data = await fetchApi("/dashboard/stats");
-        setStats(data);
+        
+        // Fetch stats
+        const statsData = await fetchApi("/dashboard/stats");
+        setStats(statsData);
+
+        // Fetch recent audit logs for movements
+        const auditData = await fetchApi<any>("/audit-logs?limit=5");
+        
+        // Map audit logs to movement format (since we don't have a direct dashboard recent movements endpoint)
+        const mappedMovements = auditData.data.map((log: any) => ({
+          id: log.id,
+          movementNumber: log.id.slice(0, 8).toUpperCase(),
+          patrimonyNumber: log.resourceId.slice(0, 8),
+          assetName: log.resourceType,
+          type: log.eventName,
+          custodian: log.actorUserId || "System",
+          location: "See details",
+          status: AssetStatus.IN_USE,
+          date: new Date(log.createdAt).toLocaleString(),
+        }));
+        
+        setMovements(mappedMovements);
       } catch (err) {
-        console.error("Failed to load dashboard stats", err);
+        console.error("Failed to load dashboard data", err);
       } finally {
         setStatsLoading(false);
+        setMovementsLoading(false);
       }
     };
-    loadStats();
+    loadData();
   }, []);
 
   const filteredMovements = React.useMemo(() => {
-    if (!searchTerm) return mockMovements;
-    return mockMovements.filter(
+    if (!searchTerm) return movements;
+    return movements.filter(
       (m) =>
         m.patrimonyNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
         m.assetName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         m.custodian.toLowerCase().includes(searchTerm.toLowerCase()),
     );
-  }, [searchTerm]);
+  }, [searchTerm, movements]);
 
   const columns = [
     {
       key: "movementNumber",
       header: "Movement Code",
-      render: (item: MockAssetMovement) => (
+      render: (item: any) => (
         <span className="font-mono text-xs font-semibold text-blue-600 dark:text-blue-400">
           {item.movementNumber}
         </span>
@@ -123,7 +89,7 @@ export default function DashboardPage() {
     {
       key: "asset",
       header: "Asset & Patrimony",
-      render: (item: MockAssetMovement) => (
+      render: (item: any) => (
         <div>
           <p className="font-medium text-slate-900 dark:text-slate-100">
             {item.assetName}
@@ -137,7 +103,7 @@ export default function DashboardPage() {
     {
       key: "type",
       header: "Action",
-      render: (item: MockAssetMovement) => (
+      render: (item: any) => (
         <span className="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300">
           {item.type}
         </span>
@@ -146,7 +112,7 @@ export default function DashboardPage() {
     {
       key: "custodian",
       header: "Custodian / Location",
-      render: (item: MockAssetMovement) => (
+      render: (item: any) => (
         <div>
           <p className="text-slate-900 dark:text-slate-100">{item.custodian}</p>
           <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -158,12 +124,12 @@ export default function DashboardPage() {
     {
       key: "status",
       header: "State",
-      render: (item: MockAssetMovement) => <StatusBadge status={item.status} />,
+      render: (item: any) => <StatusBadge status={item.status} />,
     },
     {
       key: "date",
       header: "Timestamp",
-      render: (item: MockAssetMovement) => (
+      render: (item: any) => (
         <span className="text-xs text-slate-500 dark:text-slate-400">
           {item.date}
         </span>
