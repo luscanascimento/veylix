@@ -7,32 +7,44 @@ export class PrismaService
   extends PrismaClient
   implements OnModuleInit, OnModuleDestroy
 {
-  constructor(private readonly logger: AppLogger) {
+  constructor(private readonly appLogger: AppLogger) {
     super();
   }
 
   async onModuleInit(): Promise<void> {
     try {
       await this.$connect();
-      this.logger.log("Prisma database connection established successfully.");
+      if (this.appLogger) this.appLogger.log("Prisma database connection established successfully.");
     } catch (error) {
-      this.logger.error(
-        "Failed to connect to database during initialization",
-        error instanceof Error ? error.stack : undefined,
-      );
+      if (this.appLogger) {
+        this.appLogger.error(
+          "Failed to connect to database during initialization",
+          error instanceof Error ? error.stack : undefined,
+        );
+      } else {
+        console.error("Failed to connect to database during initialization", error);
+      }
     }
   }
 
   async onModuleDestroy(): Promise<void> {
     await this.$disconnect();
-    this.logger.log("Prisma database connection disconnected cleanly.");
+    if (this.appLogger) this.appLogger.log("Prisma database connection disconnected cleanly.");
   }
 
   async isHealthy(): Promise<boolean> {
     try {
-      await this.$queryRaw`SELECT 1`;
+      // Fail-fast timeout to prevent hanging the Docker probe
+      const timeout = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Database ping timeout")), 2000),
+      );
+      await Promise.race([this.$queryRaw`SELECT 1`, timeout]);
       return true;
-    } catch {
+    } catch (error) {
+      this.appLogger.warn(
+        "Health check database ping failed or timed out",
+        error instanceof Error ? error.message : undefined,
+      );
       return false;
     }
   }

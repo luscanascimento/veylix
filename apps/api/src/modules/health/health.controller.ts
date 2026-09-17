@@ -3,7 +3,9 @@ import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { Response } from "express";
 import { SkipThrottle } from "@nestjs/throttler";
 import { HealthService } from "./health.service.js";
+import { Public } from "../../common/decorators/public.decorator.js";
 
+@Public()
 @SkipThrottle()
 @ApiTags("Health")
 @Controller("health")
