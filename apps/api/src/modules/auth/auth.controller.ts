@@ -1,6 +1,7 @@
 import {
   Controller,
   Post,
+  Get,
   Body,
   Req,
   Res,
@@ -57,5 +58,12 @@ export class AuthController {
 
     res.clearCookie("veylix_session");
     return { success: true };
+  }
+
+  @Get("me")
+  @HttpCode(HttpStatus.OK)
+  getMe(@Req() req: Request) {
+    // The AuthGuard already validates the session and attaches the user to the request
+    return { user: (req as any).user };
   }
 }
