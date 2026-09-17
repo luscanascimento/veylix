@@ -25,7 +25,7 @@ describe("Security RBAC Matrix (Positive and Negative Auth Tests)", () => {
 
   function createMockExecutionContext(
     handler: (...args: never[]) => unknown,
-    controllerClass: abstract new (...args: never) => unknown,
+    controllerClass: unknown,
     user?: unknown,
   ): ExecutionContext {
     return {
