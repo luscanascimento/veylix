@@ -1,0 +1,104 @@
+--- apps/api/src/modules/asset/services/AssetService.ts
++++ apps/api/src/modules/asset/services/AssetService.ts
+@@ -272,48 +272,50 @@
+     }
+
+     try {
+-      const updatedAsset = await this.prisma.asset.update({
+-        where: {
+-          idx_assets_id_version: {
+-            id,
+-            version: dto.version,
++      return await this.prisma.$transaction(async (tx) => {
++        const updatedAsset = await tx.asset.update({
++          where: {
++            idx_assets_id_version: {
++              id,
++              version: dto.version,
++            },
+           },
+-        },
+-        data: {
+-          ...(dto.name !== undefined && { name: dto.name }),
+-          ...(dto.brand !== undefined && { brand: dto.brand }),
+-          ...(dto.model !== undefined && { model: dto.model }),
+-          ...(dto.serialNumber !== undefined && {
+-            serialNumber: dto.serialNumber,
+-          }),
+-          ...(dto.description !== undefined && {
+-            description: dto.description,
+-          }),
+-          ...(dto.purchaseValue !== undefined && {
+-            purchaseValue: dto.purchaseValue,
+-          }),
+-          ...(dto.purchaseDate !== undefined && {
+-            purchaseDate: new Date(dto.purchaseDate),
+-          }),
+-          ...(dto.categoryId !== undefined && { categoryId: dto.categoryId }),
+-          version: dto.version + 1,
+-        },
+-        include: {
+-          category: true,
+-          location: true,
+-          assignedEmployee: true,
+-        },
+-      });
+-
+-      if (this.auditService) {
+-        await this.auditService.logEvent({
+-          eventName: "ASSET_UPDATED",
+-          actorUserId: performedByUserId,
+-          ipAddress: meta?.ipAddress,
+-          userAgent: meta?.userAgent,
+-          requestId: meta?.requestId,
+-          traceId: meta?.traceId,
+-          resourceType: "Asset",
+-          resourceId: id,
+-          changes: {
+-            ...dto,
++          data: {
++            ...(dto.name !== undefined && { name: dto.name }),
++            ...(dto.brand !== undefined && { brand: dto.brand }),
++            ...(dto.model !== undefined && { model: dto.model }),
++            ...(dto.serialNumber !== undefined && {
++              serialNumber: dto.serialNumber,
++            }),
++            ...(dto.description !== undefined && {
++              description: dto.description,
++            }),
++            ...(dto.purchaseValue !== undefined && {
++              purchaseValue: dto.purchaseValue,
++            }),
++            ...(dto.purchaseDate !== undefined && {
++              purchaseDate: new Date(dto.purchaseDate),
++            }),
++            ...(dto.categoryId !== undefined && { categoryId: dto.categoryId }),
++            version: dto.version + 1,
++          },
++          include: {
++            category: true,
++            location: true,
++            assignedEmployee: true,
+           },
+         });
+-      }
+-      return updatedAsset;
++
++        if (this.auditService) {
++          await this.auditService.logEvent({
++            eventName: "ASSET_UPDATED",
++            actorUserId: performedByUserId,
++            ipAddress: meta?.ipAddress,
++            userAgent: meta?.userAgent,
++            requestId: meta?.requestId,
++            traceId: meta?.traceId,
++            resourceType: "Asset",
++            resourceId: id,
++            changes: {
++              ...dto,
++            },
++          }, tx);
++        }
++        return updatedAsset;
++      });
+     } catch (error: unknown) {
