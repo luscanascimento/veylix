@@ -41,7 +41,10 @@ export class AuthGuard implements CanActivate {
 
       // Map database user to Domain User type if needed, or simply assign
       request.user = user;
-    } catch {
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
       throw new UnauthorizedException("Invalid session");
     }
 
