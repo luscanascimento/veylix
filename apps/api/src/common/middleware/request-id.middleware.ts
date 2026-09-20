@@ -1,6 +1,7 @@
 import { Injectable, NestMiddleware } from "@nestjs/common";
 import { Request, Response, NextFunction } from "express";
 import { randomUUID } from "node:crypto";
+import { requestContext } from "../context/request.context.js";
 
 export const REQUEST_ID_HEADER = "x-request-id";
 export const TRACE_ID_HEADER = "x-trace-id";
@@ -37,6 +38,9 @@ export class RequestIdMiddleware implements NestMiddleware {
     vReq.traceId = traceId;
     res.setHeader(REQUEST_ID_HEADER, requestId);
     res.setHeader(TRACE_ID_HEADER, traceId);
-    next();
+    
+    requestContext.run({ requestId, traceId }, () => {
+      next();
+    });
   }
 }

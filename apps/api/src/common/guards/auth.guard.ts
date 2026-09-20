@@ -6,9 +6,10 @@ import {
   Inject,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { AuthService } from "../../modules/auth/auth.service";
-import { IS_PUBLIC_KEY } from "../decorators/public.decorator";
+import { AuthService } from "../../modules/auth/auth.service.js";
+import { IS_PUBLIC_KEY } from "../decorators/public.decorator.js";
 import { Request } from "express";
+import { requestContext } from "../context/request.context.js";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -42,6 +43,11 @@ export class AuthGuard implements CanActivate {
 
       // Map database user to Domain User type if needed, or simply assign
       request.user = user;
+      
+      const ctx = requestContext.getStore();
+      if (ctx) {
+        ctx.userId = user.id;
+      }
     } catch (error) {
       if (error instanceof UnauthorizedException) {
         throw error;
