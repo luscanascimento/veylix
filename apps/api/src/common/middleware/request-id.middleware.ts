@@ -16,10 +16,10 @@ const ID_REGEX = /^[a-zA-Z0-9_-]{1,64}$/;
 export class RequestIdMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction): void {
     const vReq = req as VeylixRequest;
-    
+
     let incomingId = req.headers[REQUEST_ID_HEADER];
     if (Array.isArray(incomingId)) incomingId = incomingId[0];
-    
+
     const requestId =
       typeof incomingId === "string" && ID_REGEX.test(incomingId.trim())
         ? incomingId.trim()

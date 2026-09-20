@@ -128,7 +128,11 @@ export class AuthService {
   /**
    * Refreshes a session by creating a new one and deleting the old one.
    */
-  async refreshSession(oldSessionToken: string, ipAddress: string, userAgent: string) {
+  async refreshSession(
+    oldSessionToken: string,
+    ipAddress: string,
+    userAgent: string,
+  ) {
     const user = await this.validateSession(oldSessionToken);
     if (!user) {
       throw new UnauthorizedException("Invalid or expired session");
@@ -140,7 +144,7 @@ export class AuthService {
     // Generate new session
     const sessionToken = this.generateSessionToken();
     const sessionTokenHash = this.hashSessionToken(sessionToken);
-    
+
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7);
 

@@ -2,7 +2,13 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { PageHeader, DataTable, StatusBadge, Button, SearchInput } from "@veylix/ui";
+import {
+  PageHeader,
+  DataTable,
+  StatusBadge,
+  Button,
+  SearchInput,
+} from "@veylix/ui";
 import { Plus, Download } from "lucide-react";
 import { AssetStatus } from "@veylix/types";
 import { RoleGate } from "@/components/auth/role-gate";
@@ -20,7 +26,7 @@ export default function AssetsPage() {
       setLoading(true);
       const { fetchApi } = await import("@/lib/api-client");
       const res = await fetchApi<any>(
-        `/assets?page=${page}&limit=10${searchTerm ? `&search=${searchTerm}` : ""}`
+        `/assets?page=${page}&limit=10${searchTerm ? `&search=${searchTerm}` : ""}`,
       );
       setAssets(res.data || []);
       setTotalPages(res.meta?.totalPages || 1);
@@ -62,14 +68,16 @@ export default function AssetsPage() {
     {
       key: "status",
       header: "Status",
-      render: (item: any) => <StatusBadge status={item.status as AssetStatus} />,
+      render: (item: any) => (
+        <StatusBadge status={item.status as AssetStatus} />
+      ),
     },
     {
       key: "actions",
       header: "Actions",
       render: (item: any) => (
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           size="sm"
           onClick={() => router.push(`/assets/${item.id}`)}
         >

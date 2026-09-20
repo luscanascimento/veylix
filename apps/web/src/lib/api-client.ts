@@ -1,4 +1,5 @@
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
 export class ApiError extends Error {
   status: number;
@@ -14,7 +15,7 @@ export class ApiError extends Error {
 
 export async function fetchApi<T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<T> {
   // Always include credentials to forward the secure cookie
   const config: RequestInit = {
@@ -36,7 +37,11 @@ export async function fetchApi<T>(
     } catch {
       errorData = { message: response.statusText };
     }
-    throw new ApiError(response.status, errorData, errorData.message || response.statusText);
+    throw new ApiError(
+      response.status,
+      errorData,
+      errorData.message || response.statusText,
+    );
   }
 
   // Handle 204 No Content

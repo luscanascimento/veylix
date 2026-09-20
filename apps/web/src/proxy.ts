@@ -5,9 +5,13 @@ const publicPaths = ["/login", "/api/health"];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  
+
   // Skip public paths
-  if (publicPaths.includes(pathname) || pathname.startsWith("/_next/") || pathname.startsWith("/favicon.ico")) {
+  if (
+    publicPaths.includes(pathname) ||
+    pathname.startsWith("/_next/") ||
+    pathname.startsWith("/favicon.ico")
+  ) {
     return NextResponse.next();
   }
 

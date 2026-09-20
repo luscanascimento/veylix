@@ -71,7 +71,10 @@ export class AuthController {
 
   @Post("refresh")
   @HttpCode(HttpStatus.OK)
-  async refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const token =
       req.cookies?.veylix_session ||
       (req.headers.authorization?.startsWith("Bearer ")
@@ -85,7 +88,11 @@ export class AuthController {
     const ipAddress = req.ip || "unknown";
     const userAgent = req.headers["user-agent"] || "unknown";
 
-    const result = await this.authService.refreshSession(token, ipAddress, userAgent);
+    const result = await this.authService.refreshSession(
+      token,
+      ipAddress,
+      userAgent,
+    );
 
     res.cookie("veylix_session", result.sessionToken, {
       httpOnly: true,
@@ -100,7 +107,10 @@ export class AuthController {
 
   @Post("revoke-all")
   @HttpCode(HttpStatus.OK)
-  async revokeAll(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+  async revokeAll(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const user = (req as any).user;
     if (!user) {
@@ -109,7 +119,7 @@ export class AuthController {
 
     await this.authService.revokeAllSessions(user.id);
     res.clearCookie("veylix_session");
-    
+
     return { success: true };
   }
 }

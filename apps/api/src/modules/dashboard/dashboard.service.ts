@@ -14,23 +14,24 @@ export class DashboardService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getStats(): Promise<DashboardStats> {
-    const [totalAssets, inCustody, inMaintenance, valuationResult] = await Promise.all([
-      this.prisma.asset.count(),
-      this.prisma.asset.count({
-        where: { status: AssetStatus.IN_USE },
-      }),
-      this.prisma.asset.count({
-        where: { status: AssetStatus.MAINTENANCE },
-      }),
-      this.prisma.asset.aggregate({
-        _sum: {
-          purchaseValue: true,
-        },
-      }),
-    ]);
+    const [totalAssets, inCustody, inMaintenance, valuationResult] =
+      await Promise.all([
+        this.prisma.asset.count(),
+        this.prisma.asset.count({
+          where: { status: AssetStatus.IN_USE },
+        }),
+        this.prisma.asset.count({
+          where: { status: AssetStatus.MAINTENANCE },
+        }),
+        this.prisma.asset.aggregate({
+          _sum: {
+            purchaseValue: true,
+          },
+        }),
+      ]);
 
     // Prisma returns Decimal for sum, we convert it to number or default to 0
-    const totalValuation = valuationResult._sum?.purchaseValue 
+    const totalValuation = valuationResult._sum?.purchaseValue
       ? Number(valuationResult._sum.purchaseValue)
       : 0;
 

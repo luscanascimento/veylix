@@ -7,12 +7,16 @@ describe("DashboardService", () => {
   it("should aggregate KPIs from the database", async () => {
     const mockPrisma = {
       asset: {
-        count: vi.fn().mockImplementation((args?: { where: { status: string } }) => {
-          if (!args) return Promise.resolve(100);
-          if (args.where.status === AssetStatus.IN_USE) return Promise.resolve(75);
-          if (args.where.status === AssetStatus.MAINTENANCE) return Promise.resolve(10);
-          return Promise.resolve(0);
-        }),
+        count: vi
+          .fn()
+          .mockImplementation((args?: { where: { status: string } }) => {
+            if (!args) return Promise.resolve(100);
+            if (args.where.status === AssetStatus.IN_USE)
+              return Promise.resolve(75);
+            if (args.where.status === AssetStatus.MAINTENANCE)
+              return Promise.resolve(10);
+            return Promise.resolve(0);
+          }),
         aggregate: vi.fn().mockResolvedValue({
           _sum: { purchaseValue: "250000.50" },
         }),

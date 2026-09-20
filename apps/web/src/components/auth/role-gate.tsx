@@ -9,7 +9,11 @@ interface RoleGateProps {
   fallback?: React.ReactNode;
 }
 
-export function RoleGate({ children, allowedRoles, fallback = null }: RoleGateProps) {
+export function RoleGate({
+  children,
+  allowedRoles,
+  fallback = null,
+}: RoleGateProps) {
   const { user, isLoading } = useAuth();
 
   if (isLoading) {

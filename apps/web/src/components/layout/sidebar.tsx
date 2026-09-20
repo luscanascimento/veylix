@@ -133,7 +133,12 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
                 {user?.email || ""}
               </p>
             </div>
-            <span className={cn("inline-block h-2 w-2 rounded-full", user ? "bg-emerald-500" : "bg-slate-300")}></span>
+            <span
+              className={cn(
+                "inline-block h-2 w-2 rounded-full",
+                user ? "bg-emerald-500" : "bg-slate-300",
+              )}
+            ></span>
           </div>
         </div>
       </aside>

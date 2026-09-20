@@ -14,7 +14,10 @@ export class PrismaService
   async onModuleInit(): Promise<void> {
     try {
       await this.$connect();
-      if (this.appLogger) this.appLogger.log("Prisma database connection established successfully.");
+      if (this.appLogger)
+        this.appLogger.log(
+          "Prisma database connection established successfully.",
+        );
     } catch (error) {
       if (this.appLogger) {
         this.appLogger.error(
@@ -22,14 +25,18 @@ export class PrismaService
           error instanceof Error ? error.stack : undefined,
         );
       } else {
-        console.error("Failed to connect to database during initialization", error);
+        console.error(
+          "Failed to connect to database during initialization",
+          error,
+        );
       }
     }
   }
 
   async onModuleDestroy(): Promise<void> {
     await this.$disconnect();
-    if (this.appLogger) this.appLogger.log("Prisma database connection disconnected cleanly.");
+    if (this.appLogger)
+      this.appLogger.log("Prisma database connection disconnected cleanly.");
   }
 
   async isHealthy(): Promise<boolean> {

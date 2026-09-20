@@ -21,8 +21,6 @@ import {
   Filter,
 } from "lucide-react";
 
-
-
 export default function DashboardPage() {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [page, setPage] = React.useState(1);
@@ -35,14 +33,14 @@ export default function DashboardPage() {
     const loadData = async () => {
       try {
         const { fetchApi } = await import("@/lib/api-client");
-        
+
         // Fetch stats
         const statsData = await fetchApi("/dashboard/stats");
         setStats(statsData);
 
         // Fetch recent audit logs for movements
         const auditData = await fetchApi<any>("/audit-logs?limit=5");
-        
+
         // Map audit logs to movement format (since we don't have a direct dashboard recent movements endpoint)
         const mappedMovements = auditData.data.map((log: any) => ({
           id: log.id,
@@ -55,7 +53,7 @@ export default function DashboardPage() {
           status: AssetStatus.IN_USE,
           date: new Date(log.createdAt).toLocaleString(),
         }));
-        
+
         setMovements(mappedMovements);
       } catch (err) {
         console.error("Failed to load dashboard data", err);
@@ -190,7 +188,13 @@ export default function DashboardPage() {
         />
         <StatCard
           title="Total Valuation"
-          value={statsLoading ? "..." : stats ? formatCurrency(stats.totalValuation) : "$0"}
+          value={
+            statsLoading
+              ? "..."
+              : stats
+                ? formatCurrency(stats.totalValuation)
+                : "$0"
+          }
           description="Acquisition capital value"
           icon={DollarSign}
         />

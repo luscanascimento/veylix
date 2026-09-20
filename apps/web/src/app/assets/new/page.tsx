@@ -44,7 +44,11 @@ export default function NewAssetPage() {
     loadRefs();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
     const { name, value, type } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -83,10 +87,13 @@ export default function NewAssetPage() {
         }
       />
 
-      <form onSubmit={handleSubmit} className="space-y-8 bg-white dark:bg-slate-950 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-8 bg-white dark:bg-slate-950 p-6 rounded-xl border border-slate-200 dark:border-slate-800"
+      >
         {error && (
           <div className="p-3 text-sm text-red-600 bg-red-50 dark:bg-red-950/50 rounded-md">
-            {typeof error === 'string' ? error : JSON.stringify(error)}
+            {typeof error === "string" ? error : JSON.stringify(error)}
           </div>
         )}
 
@@ -111,7 +118,7 @@ export default function NewAssetPage() {
               required
             />
           </div>
-          
+
           <div className="space-y-2">
             <label className="text-sm font-medium">Category *</label>
             <select
@@ -123,11 +130,13 @@ export default function NewAssetPage() {
             >
               <option value="">Select Category...</option>
               {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
               ))}
             </select>
           </div>
-          
+
           <div className="space-y-2">
             <label className="text-sm font-medium">Location *</label>
             <select
@@ -139,7 +148,9 @@ export default function NewAssetPage() {
             >
               <option value="">Select Location...</option>
               {locations.map((l) => (
-                <option key={l.id} value={l.id}>{l.name}</option>
+                <option key={l.id} value={l.id}>
+                  {l.name}
+                </option>
               ))}
             </select>
           </div>
@@ -213,7 +224,12 @@ export default function NewAssetPage() {
         </div>
 
         <div className="flex justify-end gap-2 border-t border-slate-200 dark:border-slate-800 pt-6">
-          <Button type="button" variant="outline" onClick={() => router.back()} disabled={loading}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => router.back()}
+            disabled={loading}
+          >
             Cancel
           </Button>
           <Button type="submit" disabled={loading}>

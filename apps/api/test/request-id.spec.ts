@@ -2,7 +2,6 @@ import { describe, it, expect, vi } from "vitest";
 import {
   RequestIdMiddleware,
   REQUEST_ID_HEADER,
-  TRACE_ID_HEADER,
   VeylixRequest,
 } from "../src/common/middleware/request-id.middleware.js";
 import { Response } from "express";

@@ -16,7 +16,7 @@ export default function MaintenancePage() {
     try {
       setLoading(true);
       const res = await fetchApi<any>(
-        `/maintenance?page=${page}&limit=10${searchTerm ? `&search=${searchTerm}` : ""}`
+        `/maintenance?page=${page}&limit=10${searchTerm ? `&search=${searchTerm}` : ""}`,
       );
       setTickets(res.data || []);
       setTotalPages(res.meta?.totalPages || 1);
@@ -46,8 +46,12 @@ export default function MaintenancePage() {
       header: "Issue",
       render: (item: any) => (
         <div>
-          <p className="font-medium text-slate-900 dark:text-slate-100">{item.title}</p>
-          <p className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-[200px]">{item.description}</p>
+          <p className="font-medium text-slate-900 dark:text-slate-100">
+            {item.title}
+          </p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-[200px]">
+            {item.description}
+          </p>
         </div>
       ),
     },
@@ -64,11 +68,16 @@ export default function MaintenancePage() {
       key: "status",
       header: "Status",
       render: (item: any) => (
-        <span className={`inline-flex items-center gap-1 rounded px-2 py-0.5 text-xs font-medium
-          ${item.status === MaintenanceStatus.OPEN ? 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200' :
-            item.status === MaintenanceStatus.IN_PROGRESS ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' :
-            item.status === MaintenanceStatus.COMPLETED ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200' :
-            'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200'
+        <span
+          className={`inline-flex items-center gap-1 rounded px-2 py-0.5 text-xs font-medium
+          ${
+            item.status === MaintenanceStatus.OPEN
+              ? "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200"
+              : item.status === MaintenanceStatus.IN_PROGRESS
+                ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                : item.status === MaintenanceStatus.COMPLETED
+                  ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200"
+                  : "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200"
           }`}
         >
           {item.status}
@@ -79,11 +88,16 @@ export default function MaintenancePage() {
       key: "priority",
       header: "Priority",
       render: (item: any) => (
-        <span className={`text-xs font-semibold
-          ${item.priority === MaintenancePriority.CRITICAL ? 'text-red-600 dark:text-red-400' :
-            item.priority === MaintenancePriority.HIGH ? 'text-orange-600 dark:text-orange-400' :
-            item.priority === MaintenancePriority.MEDIUM ? 'text-blue-600 dark:text-blue-400' :
-            'text-slate-600 dark:text-slate-400'
+        <span
+          className={`text-xs font-semibold
+          ${
+            item.priority === MaintenancePriority.CRITICAL
+              ? "text-red-600 dark:text-red-400"
+              : item.priority === MaintenancePriority.HIGH
+                ? "text-orange-600 dark:text-orange-400"
+                : item.priority === MaintenancePriority.MEDIUM
+                  ? "text-blue-600 dark:text-blue-400"
+                  : "text-slate-600 dark:text-slate-400"
           }`}
         >
           {item.priority}
