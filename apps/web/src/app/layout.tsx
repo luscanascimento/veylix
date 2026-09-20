@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 
 import { LayoutWrapper } from "@/components/layout/layout-wrapper";
 import { AuthProvider } from "@/contexts/auth-context";
+import { Toaster } from "@veylix/ui";
 
 export default function RootLayout({
   children,
@@ -25,6 +26,7 @@ export default function RootLayout({
           <AuthProvider>
             <LayoutWrapper>{children}</LayoutWrapper>
           </AuthProvider>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

@@ -2,8 +2,9 @@
 
 import * as React from "react";
 import { useRouter, useParams } from "next/navigation";
-import { PageHeader, Button, StatusBadge, DataTable } from "@veylix/ui";
+import { PageHeader, Button, StatusBadge, DataTable, toast } from "@veylix/ui";
 import { fetchApi } from "@/lib/api-client";
+import { RoleGate } from "@/components/auth/role-gate";
 import { ArrowLeft, ArrowRightLeft, UserCheck, CornerDownLeft } from "lucide-react";
 import { AssetStatus } from "@veylix/types";
 
@@ -78,9 +79,10 @@ export default function AssetDetailsPage() {
       
       setActionType(null);
       setActionForm({ employeeId: "", locationId: "", reason: "" });
+      toast.success("Action completed successfully");
       loadData();
     } catch (err: any) {
-      alert("Action failed: " + (err.data?.message || err.message));
+      toast.error("Action failed: " + (err.data?.message || err.message));
     }
   };
 
@@ -99,24 +101,26 @@ export default function AssetDetailsPage() {
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
             </Button>
-            {asset.status === AssetStatus.AVAILABLE && (
-              <Button size="sm" onClick={() => handleActionClick("ASSIGN")}>
-                <UserCheck className="mr-2 h-4 w-4" />
-                Assign
-              </Button>
-            )}
-            {asset.status === AssetStatus.IN_USE && (
-              <>
-                <Button size="sm" variant="outline" onClick={() => handleActionClick("TRANSFER")}>
-                  <ArrowRightLeft className="mr-2 h-4 w-4" />
-                  Transfer
+            <RoleGate allowedRoles={["ADMIN", "OPERATOR"]}>
+              {asset.status === AssetStatus.AVAILABLE && (
+                <Button size="sm" onClick={() => handleActionClick("ASSIGN")}>
+                  <UserCheck className="mr-2 h-4 w-4" />
+                  Assign
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => handleActionClick("RETURN")}>
-                  <CornerDownLeft className="mr-2 h-4 w-4" />
-                  Return
-                </Button>
-              </>
-            )}
+              )}
+              {asset.status === AssetStatus.IN_USE && (
+                <>
+                  <Button size="sm" variant="outline" onClick={() => handleActionClick("TRANSFER")}>
+                    <ArrowRightLeft className="mr-2 h-4 w-4" />
+                    Transfer
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => handleActionClick("RETURN")}>
+                    <CornerDownLeft className="mr-2 h-4 w-4" />
+                    Return
+                  </Button>
+                </>
+              )}
+            </RoleGate>
           </div>
         }
       />

@@ -22,6 +22,7 @@ export async function fetchApi<T>(
     credentials: options.credentials ?? "include",
     headers: {
       "Content-Type": "application/json",
+      "X-Requested-With": "XMLHttpRequest",
       ...options.headers,
     },
   };

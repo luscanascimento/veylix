@@ -24,14 +24,14 @@ export class DashboardService {
       }),
       this.prisma.asset.aggregate({
         _sum: {
-          purchasePrice: true,
+          purchaseValue: true,
         },
       }),
     ]);
 
     // Prisma returns Decimal for sum, we convert it to number or default to 0
-    const totalValuation = valuationResult._sum.purchasePrice 
-      ? Number(valuationResult._sum.purchasePrice)
+    const totalValuation = valuationResult._sum?.purchaseValue 
+      ? Number(valuationResult._sum.purchaseValue)
       : 0;
 
     return {

@@ -7,10 +7,9 @@ This file tracks the active progress of the Veylix platform development across a
 ## Current Status
 
 - **Phase**: Phase 2 — Product Completion, Security Hardening & Production Readiness
-- **Completed Stage**: FASE 1 — Core Fixes & Real Frontend Workflows
-- **Current Checkpoint**: CHECKPOINT 2 — Jules Frontend Review (APPROVED)
-  - Review Document: `docs/reviews/checkpoint-2-jules.md`
-- **Next Stage**: FASE 2 — Security Hardening & Concurrency
+- **Completed Stage**: FASE 2 — Security Hardening & Concurrency
+- **Current Checkpoint**: CHECKPOINT 3 — Jules Offensive Security Audit (PENDING)
+- **Next Stage**: FASE 3 — Observability & Production Probes
 
 ---
 
@@ -41,7 +40,7 @@ This file tracks the active progress of the Veylix platform development across a
 - [x] **CHECKPOINT 1: Jules Review of Current-State Assessment**
 - [x] **FASE 1: Core Fixes & Real Frontend Workflows**
 - [x] **CHECKPOINT 2: Jules Frontend Review**
-- [ ] **FASE 2: Security Hardening & Concurrency**
+- [x] **FASE 2: Security Hardening & Concurrency**
 - [ ] **CHECKPOINT 3: Jules Offensive Security Audit**
 - [ ] **FASE 3: Observability & Production Probes**
 - [ ] **CHECKPOINT 4: Jules Observability Audit**

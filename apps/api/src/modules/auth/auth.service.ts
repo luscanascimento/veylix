@@ -115,4 +115,45 @@ export class AuthService {
       where: { sessionTokenHash },
     });
   }
+
+  /**
+   * Revokes all active sessions for a specific user.
+   */
+  async revokeAllSessions(userId: string) {
+    await this.prisma.session.deleteMany({
+      where: { userId },
+    });
+  }
+
+  /**
+   * Refreshes a session by creating a new one and deleting the old one.
+   */
+  async refreshSession(oldSessionToken: string, ipAddress: string, userAgent: string) {
+    const user = await this.validateSession(oldSessionToken);
+    if (!user) {
+      throw new UnauthorizedException("Invalid or expired session");
+    }
+
+    // Delete the old session
+    await this.logout(oldSessionToken);
+
+    // Generate new session
+    const sessionToken = this.generateSessionToken();
+    const sessionTokenHash = this.hashSessionToken(sessionToken);
+    
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7);
+
+    await this.prisma.session.create({
+      data: {
+        userId: user.id,
+        sessionTokenHash,
+        ipAddress,
+        userAgent,
+        expiresAt,
+      },
+    });
+
+    return { sessionToken, user };
+  }
 }

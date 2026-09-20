@@ -10,6 +10,7 @@ import {
   Button,
 } from "@veylix/ui";
 import { AssetStatus } from "@veylix/types";
+import { RoleGate } from "@/components/auth/role-gate";
 import {
   Laptop,
   CheckCircle2,
@@ -151,16 +152,18 @@ export default function DashboardPage() {
         title="Asset Inventory Dashboard"
         description="Real-time physical asset lifecycle, custody tracking, and operational metrics."
         actions={
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              <ArrowRightLeft className="h-4 w-4" />
-              Transfer Custody
-            </Button>
-            <Button size="sm">
-              <Plus className="h-4 w-4" />
-              Register Asset
-            </Button>
-          </div>
+          <RoleGate allowedRoles={["ADMIN", "OPERATOR"]}>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm">
+                <ArrowRightLeft className="h-4 w-4" />
+                Transfer Custody
+              </Button>
+              <Button size="sm">
+                <Plus className="h-4 w-4" />
+                Register Asset
+              </Button>
+            </div>
+          </RoleGate>
         }
       />
 

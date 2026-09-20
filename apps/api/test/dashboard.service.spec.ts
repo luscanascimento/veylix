@@ -14,7 +14,7 @@ describe("DashboardService", () => {
           return Promise.resolve(0);
         }),
         aggregate: vi.fn().mockResolvedValue({
-          _sum: { purchasePrice: "250000.50" },
+          _sum: { purchaseValue: "250000.50" },
         }),
       },
     } as unknown as PrismaService;
@@ -36,7 +36,7 @@ describe("DashboardService", () => {
       asset: {
         count: vi.fn().mockResolvedValue(0),
         aggregate: vi.fn().mockResolvedValue({
-          _sum: { purchasePrice: null },
+          _sum: { purchaseValue: null },
         }),
       },
     } as unknown as PrismaService;

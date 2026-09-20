@@ -17,6 +17,7 @@ import { DashboardModule } from "./modules/dashboard/dashboard.module.js";
 import { RequestIdMiddleware } from "./common/middleware/request-id.middleware.js";
 import { AuthGuard } from "./common/guards/auth.guard.js";
 import { RolesGuard } from "./common/guards/roles.guard.js";
+import { CsrfGuard } from "./common/guards/csrf.guard.js";
 import { ThrottlerModule, ThrottlerGuard } from "@nestjs/throttler";
 
 @Module({
@@ -49,6 +50,10 @@ import { ThrottlerModule, ThrottlerGuard } from "@nestjs/throttler";
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: CsrfGuard,
     },
     {
       provide: APP_GUARD,

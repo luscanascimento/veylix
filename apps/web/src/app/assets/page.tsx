@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { PageHeader, DataTable, StatusBadge, Button, SearchInput } from "@veylix/ui";
 import { Plus, Download } from "lucide-react";
 import { AssetStatus } from "@veylix/types";
+import { RoleGate } from "@/components/auth/role-gate";
 
 export default function AssetsPage() {
   const router = useRouter();
@@ -84,15 +85,17 @@ export default function AssetsPage() {
         title="Asset Inventory"
         description="Manage all physical assets, equipment, and devices."
         actions={
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
+          <div className="flex gap-2">
+            <Button size="sm" variant="outline">
               <Download className="mr-2 h-4 w-4" />
               Export
             </Button>
-            <Button size="sm" onClick={() => router.push("/assets/new")}>
-              <Plus className="mr-2 h-4 w-4" />
-              New Asset
-            </Button>
+            <RoleGate allowedRoles={["ADMIN", "OPERATOR"]}>
+              <Button size="sm" onClick={() => router.push("/assets/new")}>
+                <Plus className="mr-2 h-4 w-4" />
+                New Asset
+              </Button>
+            </RoleGate>
           </div>
         }
       />
