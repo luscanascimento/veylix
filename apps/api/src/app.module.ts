@@ -13,6 +13,7 @@ import { LocationModule } from "./modules/location/location.module.js";
 import { EmployeeModule } from "./modules/employee/employee.module.js";
 import { AuditModule } from "./modules/audit/audit.module.js";
 import { MaintenanceModule } from "./modules/maintenance/maintenance.module.js";
+import { MetricsModule } from "./modules/metrics/metrics.module.js";
 import { RequestIdMiddleware } from "./common/middleware/request-id.middleware.js";
 import { AuthGuard } from "./common/guards/auth.guard.js";
 import { RolesGuard } from "./common/guards/roles.guard.js";
@@ -34,6 +35,7 @@ import { RolesGuard } from "./common/guards/roles.guard.js";
     EmployeeModule,
     AuditModule,
     MaintenanceModule,
+    MetricsModule,
   ],
   providers: [
     {

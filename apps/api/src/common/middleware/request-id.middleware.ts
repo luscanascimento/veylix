@@ -1,6 +1,7 @@
 import { Injectable, NestMiddleware } from "@nestjs/common";
 import { Request, Response, NextFunction } from "express";
 import { randomUUID } from "node:crypto";
+import { loggerAsyncLocalStorage } from "../logger/logger-context.js";
 
 export const REQUEST_ID_HEADER = "x-request-id";
 export const TRACE_ID_HEADER = "x-trace-id";
@@ -30,6 +31,16 @@ export class RequestIdMiddleware implements NestMiddleware {
     vReq.traceId = traceId;
     res.setHeader(REQUEST_ID_HEADER, requestId);
     res.setHeader(TRACE_ID_HEADER, traceId);
-    next();
+
+    loggerAsyncLocalStorage.run(
+      {
+        requestId,
+        traceId,
+        // userId would typically be populated by an auth guard or middleware later in the lifecycle
+      },
+      () => {
+        next();
+      }
+    );
   }
 }

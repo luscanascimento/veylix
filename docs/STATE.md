@@ -28,6 +28,7 @@ This file tracks the active progress of the Veylix platform development across a
 - [x] **CHECKPOINT D: Jules Security Review (Offensive)** (Merged in `fcb6108`)
 - [x] **ETAPA 5: Core Asset Management** (Merged in `1f9283f`)
 - [x] **ETAPA 6: Maintenance + Audit + Observability** (Commit `70a43b5`)
+- [x] **CHECKPOINT 4: Jules Observability Audit** (Completed)
 - [x] **CHECKPOINT E: Jules Production Readiness & Observability Audit** (Commit `b04f581`)
 - [x] **ETAPA 7: Testing Hardening** (Commit `33ee9f2`)
 - [x] **CHECKPOINT F: Jules Test Suite Review** (Merged in `1e19864`)

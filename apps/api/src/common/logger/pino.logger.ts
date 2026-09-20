@@ -1,5 +1,6 @@
 import { Injectable, LoggerService } from "@nestjs/common";
 import pino from "pino";
+import { loggerAsyncLocalStorage } from "./logger-context.js";
 
 @Injectable()
 export class AppLogger implements LoggerService {
@@ -21,6 +22,17 @@ export class AppLogger implements LoggerService {
       base: {
         service: "veylix-api",
         environment: process.env["NODE_ENV"] || "development",
+      },
+      mixin() {
+        const store = loggerAsyncLocalStorage.getStore();
+        if (store) {
+          return {
+            requestId: store.requestId,
+            traceId: store.traceId,
+            userId: store.userId,
+          };
+        }
+        return {};
       },
     });
   }
