@@ -38,7 +38,7 @@ export class RequestIdMiddleware implements NestMiddleware {
     vReq.traceId = traceId;
     res.setHeader(REQUEST_ID_HEADER, requestId);
     res.setHeader(TRACE_ID_HEADER, traceId);
-    
+
     requestContext.run({ requestId, traceId }, () => {
       next();
     });

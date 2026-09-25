@@ -43,7 +43,7 @@ export class AuthGuard implements CanActivate {
 
       // Map database user to Domain User type if needed, or simply assign
       request.user = user;
-      
+
       const ctx = requestContext.getStore();
       if (ctx) {
         ctx.userId = user.id;

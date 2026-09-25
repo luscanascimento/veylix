@@ -3,10 +3,13 @@ import { execSync } from "child_process";
 
 function hasBrowserDependencies(): boolean {
   try {
-    const result = execSync("ldconfig -p | grep -E 'libnspr4|libnss3'", {
+    const nss = execSync("ldconfig -p | grep -E 'libnspr4|libnss3'", {
       stdio: "pipe",
     });
-    return result.length > 0;
+    const asound = execSync("ldconfig -p | grep libasound", {
+      stdio: "pipe",
+    });
+    return nss.length > 0 && asound.length > 0;
   } catch {
     return false;
   }
