@@ -18,17 +18,17 @@ RUN turbo prune api --docker
 FROM base AS installer
 WORKDIR /app
 
-# Copy dependency specifications from pruner
+# Copy dependency specifications from pruner and prisma schema
 COPY --from=pruner /app/out/json/ .
 COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+COPY prisma ./prisma
 
 # Install dependencies using frozen lockfile
 RUN pnpm install --frozen-lockfile
 
-# Copy pruned source files and prisma schema
+# Copy pruned source files
 COPY --from=pruner /app/out/full/ .
-COPY prisma ./prisma
 
 # Generate Prisma Client & build workspace dependencies and API
 RUN pnpm db:generate
@@ -59,4 +59,4 @@ EXPOSE 4000
 HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:4000/health/liveness || exit 1
 
-CMD ["node", "apps/api/dist/src/main.js"]
+CMD ["sh", "-c", "if [ -f apps/api/dist/src/main.js ]; then node apps/api/dist/src/main.js; else node apps/api/dist/main.js; fi"]

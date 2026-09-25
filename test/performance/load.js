@@ -13,7 +13,7 @@ export const options = {
   },
 };
 
-const BASE_URL = __ENV.API_URL || 'http://localhost:4000/api';
+const BASE_URL = __ENV.API_URL || 'http://localhost:4000';
 
 export default function () {
   // We hit the health endpoint which represents the unauthenticated read path

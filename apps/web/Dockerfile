@@ -18,10 +18,11 @@ RUN turbo prune web --docker
 FROM base AS installer
 WORKDIR /app
 
-# Copy dependency specifications from pruner
+# Copy dependency specifications from pruner and prisma schema
 COPY --from=pruner /app/out/json/ .
 COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+COPY prisma ./prisma
 
 # Install dependencies using frozen lockfile
 RUN pnpm install --frozen-lockfile
@@ -57,6 +58,6 @@ USER nextjs
 EXPOSE 3000
 
 HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1:3000/api/health || exit 1
 
 CMD ["node", "apps/web/server.js"]
