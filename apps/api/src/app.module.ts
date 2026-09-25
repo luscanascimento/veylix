@@ -1,8 +1,8 @@
 import { Module, MiddlewareConsumer, NestModule } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
-import { validateEnv } from "./config/env.validation.js";
 import configuration from "./config/configuration.js";
+import { validateEnv } from "./config/env.validation.js";
 import { LoggerModule } from "./common/logger/logger.module.js";
 import { PrismaModule } from "./modules/prisma/prisma.module.js";
 import { HealthModule } from "./modules/health/health.module.js";
