@@ -37,6 +37,30 @@ export default function AssetsPage() {
     }
   }, [page, searchTerm]);
 
+  const handleExport = React.useCallback(() => {
+    if (!assets.length) return;
+    const headers = ["Patrimony Number", "Name", "Category", "Status"];
+    const rows = assets.map((a) => [
+      a.patrimonyNumber,
+      `"${(a.name || "").replace(/"/g, '""')}"`,
+      `"${(a.category?.name || "").replace(/"/g, '""')}"`,
+      a.status,
+    ]);
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute(
+      "download",
+      `veylix_assets_${new Date().toISOString().slice(0, 10)}.csv`,
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }, [assets]);
+
   React.useEffect(() => {
     loadAssets();
   }, [loadAssets]);
@@ -94,7 +118,12 @@ export default function AssetsPage() {
         description="Manage all physical assets, equipment, and devices."
         actions={
           <div className="flex gap-2">
-            <Button size="sm" variant="outline">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleExport}
+              disabled={!assets.length}
+            >
               <Download className="mr-2 h-4 w-4" />
               Export
             </Button>

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import {
   PageHeader,
   StatCard,
@@ -22,6 +23,7 @@ import {
 } from "lucide-react";
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [searchTerm, setSearchTerm] = React.useState("");
   const [page, setPage] = React.useState(1);
   const [stats, setStats] = React.useState<any>(null);
@@ -152,12 +154,16 @@ export default function DashboardPage() {
         actions={
           <RoleGate allowedRoles={["ADMIN", "OPERATOR"]}>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm">
-                <ArrowRightLeft className="h-4 w-4" />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => router.push("/assets")}
+              >
+                <ArrowRightLeft className="mr-2 h-4 w-4" />
                 Transfer Custody
               </Button>
-              <Button size="sm">
-                <Plus className="h-4 w-4" />
+              <Button size="sm" onClick={() => router.push("/assets/new")}>
+                <Plus className="mr-2 h-4 w-4" />
                 Register Asset
               </Button>
             </div>
