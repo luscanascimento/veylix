@@ -808,4 +808,65 @@ export class AssetService {
       },
     });
   }
+
+  /**
+   * Retrieves paginated immutable movement history across all assets.
+   */
+  async listAllMovements(page = 1, limit = 25, search?: string) {
+    const skip = (page - 1) * limit;
+    const where: Prisma.AssetMovementWhereInput = {};
+
+    if (search) {
+      where.OR = [
+        { movementNumber: { contains: search, mode: "insensitive" } },
+        { reason: { contains: search, mode: "insensitive" } },
+        { asset: { name: { contains: search, mode: "insensitive" } } },
+        {
+          asset: { patrimonyNumber: { contains: search, mode: "insensitive" } },
+        },
+      ];
+    }
+
+    const [data, total] = await Promise.all([
+      this.prisma.assetMovement.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: "desc" },
+        include: {
+          asset: {
+            select: {
+              id: true,
+              name: true,
+              patrimonyNumber: true,
+              status: true,
+            },
+          },
+          fromEmployee: true,
+          toEmployee: true,
+          fromLocation: true,
+          toLocation: true,
+          performedByUser: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              role: true,
+            },
+          },
+        },
+      }),
+      this.prisma.assetMovement.count({ where }),
+    ]);
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit) || 1,
+      },
+    };
+  }
 }
