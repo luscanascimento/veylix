@@ -56,7 +56,7 @@ export default function LoginPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@veylix.corp"
+                  placeholder="admin@veylix.local"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -87,6 +87,13 @@ export default function LoginPage() {
               {error}
             </div>
           )}
+
+          <div className="rounded-md bg-slate-50 p-3 text-xs text-slate-500 dark:bg-slate-900 dark:text-slate-400">
+            <span className="font-semibold text-slate-700 dark:text-slate-300">
+              Demo credentials:
+            </span>{" "}
+            admin@veylix.local / admin123
+          </div>
 
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? "Signing in..." : "Sign in"}

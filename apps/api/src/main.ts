@@ -48,11 +48,27 @@ async function bootstrap() {
   app.use(cookieParser());
 
   // CORS Configuration
-  const corsOrigins = (
-    process.env["CORS_ORIGINS"] || "http://localhost:3000"
-  ).split(",");
+  const configuredOrigins = (
+    process.env["CORS_ORIGINS"] || "http://localhost:3000,http://127.0.0.1:3000"
+  )
+    .split(",")
+    .map((o) => o.trim());
+
   app.enableCors({
-    origin: corsOrigins,
+    origin: (
+      requestOrigin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void,
+    ) => {
+      // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
+      if (!requestOrigin) return callback(null, true);
+      if (
+        configuredOrigins.includes(requestOrigin) ||
+        /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(requestOrigin)
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, false);
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: [
@@ -60,6 +76,7 @@ async function bootstrap() {
       "Authorization",
       "X-Request-Id",
       "Idempotency-Key",
+      "X-Requested-With",
     ],
   });
 

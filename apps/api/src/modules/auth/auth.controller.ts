@@ -33,9 +33,11 @@ export class AuthController {
 
     const result = await this.authService.login(dto, ipAddress, userAgent);
 
+    const isSecure = req.secure || req.headers["x-forwarded-proto"] === "https";
+
     res.cookie("veylix_session", result.sessionToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: isSecure,
       sameSite: "lax",
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
@@ -94,9 +96,11 @@ export class AuthController {
       userAgent,
     );
 
+    const isSecure = req.secure || req.headers["x-forwarded-proto"] === "https";
+
     res.cookie("veylix_session", result.sessionToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: isSecure,
       sameSite: "lax",
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
