@@ -5,6 +5,7 @@ import { Search, Bell, Menu } from "lucide-react";
 import { Button } from "@veylix/ui";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { CommandPalette } from "@/components/layout/command-palette";
+import { NotificationsDropdown } from "@/components/layout/notifications-dropdown";
 
 export interface HeaderProps {
   onMenuClick?: () => void;
@@ -39,14 +40,7 @@ export function Header({ onMenuClick }: HeaderProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative text-slate-600 dark:text-slate-400"
-          >
-            <Bell className="h-4 w-4" />
-            <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-blue-600"></span>
-          </Button>
+          <NotificationsDropdown />
           <ThemeToggle />
         </div>
       </header>
